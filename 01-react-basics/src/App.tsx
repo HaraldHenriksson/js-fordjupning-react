@@ -3,12 +3,12 @@ import './App.css'
 
 const App = () => {
   
-  let [msg, setMsg] = useState("Hi mom, I'm stateful")
+  let [msg, setMsg] = useState("I'm stateful")
   let [count, setCount] = useState(0)
 
   const handleButtonClick = () => {
     console.log("You clicked the button, good boi")
-    setMsg("Bye mom")
+    setMsg("State has been changed")
     setCount(count + 1)
   }
 
