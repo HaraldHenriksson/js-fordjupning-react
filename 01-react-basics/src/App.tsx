@@ -11,7 +11,7 @@ const App = () => {
 
 const [msg, setMsg] = useState("I'm stateful")
 const [count, setCount] = useState(0)
-const [posts, setPosts] = useState<Post[]>([
+const [posts, _setPosts] = useState<Post[]>([
   { id: 1, title: "React Rocks🤟!", likes: 1337 },
   { id: 2, title: "JSX Rocks Even More☠️!", likes: 1534 },
   { id: 3, title: "Got state?🧐", likes: 8923 },
