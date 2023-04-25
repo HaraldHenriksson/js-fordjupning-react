@@ -28,6 +28,15 @@ const done = () => {
   setMsg('React is wonderful')
 }
 
+const [salary, setSalary] = useState(10)
+
+const handleChangeSalary = (amount: number) => {
+  if (salary + amount < 5) {
+    return setSalary(5)
+  }
+  setSalary(salary + amount)
+}
+
   return (
     <div className='App'>
     <h1>React Basics</h1>
@@ -40,7 +49,33 @@ const done = () => {
 
     <button onClick={done} className='btn btn-danger btn-lg'>Done</button>
 
-    <h2>Posts</h2> 
+    <hr />
+
+{salary < 10 && <p>You need a new job</p>}
+
+<p>Salary per hour: {salary} &euro;</p>
+
+<div className="buttons">
+  <div className="mb-1">
+    <button onClick={() => {handleChangeSalary(1)}}
+      className="btn btn-primary btn-lg"
+    >Raise 1 &euro; 🤑</button>
+    <button onClick={() => {handleChangeSalary(-1)}}
+      className="btn btn-warning btn-lg"
+    >Decrease 1 &euro; 😢</button>
+  </div>
+
+  <div className="mb-1">
+    <button onClick={() => handleChangeSalary(5)}
+      className="btn btn-success btn-lg"
+    >Raise 5 &euro; 🤑🤑🤑</button>
+    <button onClick={() =>handleChangeSalary(-5)}
+      className="btn btn-danger btn-lg"
+    >Decrease 5 &euro; 😢😢😢</button>
+  </div>
+</div>
+
+<hr />
 
     <ul>
       {
