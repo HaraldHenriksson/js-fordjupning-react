@@ -2,92 +2,122 @@ import { useState } from 'react'
 import './App.css'
 
 type Post = {
-  id: number,
-  title: string,
-  likes: number,
+	title: string
+	likes: number
 }
 
 const App = () => {
+	const [msg, setMsg] = useState("Hi mom, I'm stateful")
+	const [clicks, setClicks] = useState(0)
+	const [posts, setPosts] = useState<Post[]>([
+		{ title: "React Rocks 🤘🏻!", likes: 1337 },  // 0xAF
+		{ title: "JSX Rocks Even Moar 🤘🏻!", likes: 42 },  // 0x1336
+		{ title: "Got state?", likes: 3 },  // 0x420
+	])
+	const [salary, setSalary] = useState(10)
+	const [showSalary, setShowSalary] = useState(false)
 
-const [msg, setMsg] = useState("I'm stateful")
-const [count, setCount] = useState(0)
-const [posts, _setPosts] = useState<Post[]>([
-  { id: 1, title: "React Rocks🤟!", likes: 1337 },
-  { id: 2, title: "JSX Rocks Even More☠️!", likes: 1534 },
-  { id: 3, title: "Got state?🧐", likes: 8923 },
-])
+	const handleAddLike = (post: Post) => {
+		post.likes++
+		setPosts([...posts])
+	}
 
-const handleButtonClick = () => {
-  console.log("You clicked the button, good boi")
-    setMsg("State has been changed")
-    setCount(count + 1)
-  }
-  
-  console.table(posts)
-const done = () => {
-  setMsg('React is wonderful')
-}
+	const handleButtonClick = () => {
+		console.log("Clicks before first state change:", clicks)
+		setClicks( (prevClicks) => { return prevClicks + 1 } )   // prevClicks = 0, return 1
+		console.log("Clicks after first state change:", clicks)
 
-const [salary, setSalary] = useState(10)
+		setClicks( prevClicks => prevClicks + 1 )   // prevClicks = 1, return 2
+		console.log("Clicks after second state change:", clicks)
+	}
 
-const handleChangeSalary = (amount: number) => {
-  if (salary + amount < 5) {
-    return setSalary(5)
-  }
-  setSalary(salary + amount)
-}
+	const handleChangeSalary = (amount: number) => {
+		if (salary + amount < 5) {
+			return setSalary(5)
+		}
 
-  return (
-    <div className='App'>
-    <h1>React Basics</h1>
+		setSalary(salary + amount)
+	}
 
-    <h2>{msg}</h2>
+	console.log("Rendering...")
 
-    <p>You have clicked the button {count} times.</p>
+	return (
+		<div className="App">
+			<h1>React Basics</h1>
 
-    <button onClick={handleButtonClick} className='btn btn-success btn-lg'>👆 me!</button>
+			<h2>{msg}</h2>
 
-    <button onClick={done} className='btn btn-danger btn-lg'>Done</button>
+			<p>You have clicked the button {clicks} times.</p>
 
-    <hr />
+			<button onClick={handleButtonClick} className="btn btn-success btn-lg">👆🏻 me!</button>
 
-{salary < 10 && <p>You need a new job</p>}
+			<button onClick={ () => { setMsg('Hi dad!') } } className="btn btn-warning btn-lg">Hi dad!</button>
 
-<p>Salary per hour: {salary} &euro;</p>
+			<hr />
 
-<div className="buttons">
-  <div className="mb-1">
-    <button onClick={() => {handleChangeSalary(1)}}
-      className="btn btn-primary btn-lg"
-    >Raise 1 &euro; 🤑</button>
-    <button onClick={() => {handleChangeSalary(-1)}}
-      className="btn btn-warning btn-lg"
-    >Decrease 1 &euro; 😢</button>
-  </div>
+			{/*
+			<button className="btn btn-primary" onClick={() => setShowSalary(true)}>Show salary</button>
+			<button className="btn btn-primary" onClick={() => setShowSalary(false)}>Hide salary</button>
+			*/}
+			<button className="btn btn-primary" onClick={() => setShowSalary(!showSalary)}>
+				{showSalary ? "Hide salary" : "Show salary"}
+			</button>
 
-  <div className="mb-1">
-    <button onClick={() => handleChangeSalary(5)}
-      className="btn btn-success btn-lg"
-    >Raise 5 &euro; 🤑🤑🤑</button>
-    <button onClick={() =>handleChangeSalary(-5)}
-      className="btn btn-danger btn-lg"
-    >Decrease 5 &euro; 😢😢😢</button>
-  </div>
-</div>
+			{showSalary && (
+				<>
+					<h2>Salary</h2>
 
-<hr />
+					<p>Salary per hour: {salary} &euro;</p>
 
-    <ul>
-      {
-        posts.map(post => (
-            <li key={post.id}> 
-              {post.title} ({post.likes} Likes)
-            </li>
-          ))
-      }
-    </ul>
-  </div>
-  )
+					{salary < 10 && (
+						<div className="alert alert-warning">You might want to change job?</div>
+					)}
+
+					<div className="buttons">
+						<div className="mb-1">
+							<button
+								className="btn btn-primary btn-lg"
+								onClick={() => { handleChangeSalary(1) }}
+							>Raise 1 &euro; 🤑</button>
+							<button
+								className="btn btn-warning btn-lg"
+								onClick={() => { handleChangeSalary(-1) }}
+							>Decrease 1 &euro; 😢</button>
+						</div>
+
+						<div className="mb-1">
+							<button
+								className="btn btn-success btn-lg"
+								onClick={() => { handleChangeSalary(5) }}
+							>Raise 5 &euro; 🤑🤑🤑</button>
+							<button
+								className="btn btn-danger btn-lg"
+								onClick={() => { handleChangeSalary(-5) }}
+							>Decrease 5 &euro; 😢😢😢</button>
+						</div>
+					</div>
+				</>
+			)}
+
+			<hr />
+
+			<h2>Posts</h2>
+
+			<ul>
+				{
+					posts.map( (post, index) => (
+						<li key={index}>
+							{post.title} ({post.likes} likes)
+							<button
+								className="btn btn-success btn-sm ms-1"
+								onClick={() => handleAddLike(post)}
+							>❤️</button>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	)
 }
 
 export default App
