@@ -1,12 +1,13 @@
 import { useState } from 'react'
-import { Todo, TodoList } from './types'
+import { Todo, TodoList as TodoListType } from './types'
 import './assets/scss/App.scss'
 import TodoListItem from './components/TodoListitem'
 import TodoCounter from './components/TodoCounter'
 import AddNewTodoForm from './components/AddNewTodoForm'
+import TodoList from './components/TodoList'
 
 function App() {
-	const [todos, setTodos] = useState<TodoList>([
+	const [todos, setTodos] = useState<TodoListType>([
 		{ title: "Make coffee", completed: true },
 		{ title: "Drink coffee", completed: false },
 		{ title: "Drink MOAR coffee", completed: false },
@@ -38,29 +39,9 @@ function App() {
 
 			{todos.length > 0 && (
 				<>
-					<ul className="todolist">
-						{unfinishedTodos.map((todo, index) => (
-							<TodoListItem 
-							onToggle={toggleTodo}
-							onDelete={deleteTodo}
-							todo={todo} 
-							key={index}
-						 />
-						) )}
-					</ul>
-
-					<ul className="todolist">
-						{finishedTodos.map((todo, index) => (
-							<TodoListItem 
-							onToggle={toggleTodo}
-							onDelete={deleteTodo}
-							todo={todo} 
-							key={index}
-						 />
-						) )}
-					</ul>
-							<TodoCounter finishedTodos={finishedTodos.length} todos={todos.length}/>
-				</>
+				<TodoList todos={unfinishedTodos} onToggle={toggleTodo} onDelete={deleteTodo} />
+				<TodoList todos={finishedTodos} onToggle={toggleTodo} onDelete={deleteTodo} />
+			</>
 			)}
 
 			{todos.length === 0 && (
