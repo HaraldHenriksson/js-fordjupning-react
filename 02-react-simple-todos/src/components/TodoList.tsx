@@ -1,6 +1,6 @@
 import React from 'react'
 import { Todo } from '../types'
-import TodoListItem from './TodoListitem'
+import TodoListItem from './TodoListItem';
 
 interface Iprops {
     todos: Todo[];
