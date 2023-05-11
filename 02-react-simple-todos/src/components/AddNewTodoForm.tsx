@@ -13,6 +13,10 @@ const AddNewTodoForm: React.FC<Iprops> = ({ addTodo }) =>{
 		// stop form from submitting
 		e.preventDefault()
 
+        if (!newTodoTitle.trim()) {
+			return;
+		}
+
 		// create a new todo and set a new todos state
 		const newTodo: Todo = {
 			title: newTodoTitle,

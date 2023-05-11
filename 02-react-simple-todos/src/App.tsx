@@ -12,22 +12,6 @@ function App() {
 		{ title: "Drink MOAR coffee", completed: false },
 		{ title: "Drink ALL THE coffee", completed: false },
 	])
-	const [newTodoTitle, setNewTodoTitle] = useState("")
-
-	const handleSubmit = (e: React.FormEvent) => {
-		// stop form from submitting
-		e.preventDefault()
-
-		// create a new todo and set a new todos state
-		const newTodo: Todo = {
-			title: newTodoTitle,
-			completed: false,
-		}
-		setTodos([...todos, newTodo])
-
-		// clear newTodoTitle state
-		setNewTodoTitle("")
-	}
 
 	const deleteTodo = (todoToDelete: Todo) => {
 		// set a new list of todos where the clicked todo is excluded
