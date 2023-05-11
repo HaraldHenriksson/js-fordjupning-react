@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Todo, TodoList as TodoListType } from './types'
 import './assets/scss/App.scss'
-import TodoListItem from './components/TodoListitem'
 import TodoCounter from './components/TodoCounter'
 import AddNewTodoForm from './components/AddNewTodoForm'
 import TodoList from './components/TodoList'
@@ -41,6 +40,7 @@ function App() {
 				<>
 				<TodoList todos={unfinishedTodos} onToggle={toggleTodo} onDelete={deleteTodo} />
 				<TodoList todos={finishedTodos} onToggle={toggleTodo} onDelete={deleteTodo} />
+				<TodoCounter finishedTodos={finishedTodos.length} todos={todos.length}/>
 			</>
 			)}
 
