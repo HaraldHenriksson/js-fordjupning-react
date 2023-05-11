@@ -3,6 +3,7 @@ import { Todo, TodoList } from './types'
 import './assets/scss/App.scss'
 import TodoListItem from './components/TodoListitem'
 import TodoCounter from './components/TodoCounter'
+import AddNewTodoForm from './components/AddNewTodoForm'
 
 function App() {
 	const [todos, setTodos] = useState<TodoList>([
@@ -41,26 +42,15 @@ function App() {
 	const unfinishedTodos = todos.filter(todo => !todo.completed)
 	const finishedTodos = todos.filter(todo => todo.completed)
 
+	const addTodo = (newTodo: Todo) => {
+		setTodos([...todos, newTodo]);
+	  }
+
 	return (
-		<div className="container">
-			<h1 className="mb-3">React Simple Todos</h1>
+		<div className='container'>
 
-			<form onSubmit={handleSubmit} className="mb-3">
-				<div className="input-group">
-					<input
-						type="text"
-						className="form-control"
-						placeholder="Todo title"
-						onChange={e => setNewTodoTitle(e.target.value)}
-						value={newTodoTitle}
-					/>
-
-					<button
-						type="submit"
-						className="btn btn-success"
-					>Create</button>
-				</div>
-			</form>
+		<h1 className="mb-3">React Simple Todos</h1>
+		<AddNewTodoForm addTodo={addTodo}/>
 
 			{todos.length > 0 && (
 				<>
@@ -92,7 +82,6 @@ function App() {
 			{todos.length === 0 && (
 				<p>Yayyy, you have 0 todos to do</p>
 			)}
-
 		</div>
 	)
 }
