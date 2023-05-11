@@ -14,7 +14,7 @@ const AddNewTodoForm: React.FC<Iprops> = ({ addTodo }) =>{
 		e.preventDefault()
 
         if (!newTodoTitle.trim()) {
-			return;
+			return
 		}
 
 		// create a new todo and set a new todos state
@@ -41,6 +41,7 @@ const AddNewTodoForm: React.FC<Iprops> = ({ addTodo }) =>{
 					/>
 
 					<button
+					disabled={!newTodoTitle.trim()}
 						type="submit"
 						className="btn btn-success"
 					>Create</button>
