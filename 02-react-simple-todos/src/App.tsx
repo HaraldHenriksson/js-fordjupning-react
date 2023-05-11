@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Todo, TodoList } from './types'
 import './assets/scss/App.scss'
 import TodoListItem from './components/TodoListitem'
+import TodoCounter from './components/TodoCounter'
 
 function App() {
 	const [todos, setTodos] = useState<TodoList>([
@@ -39,22 +40,6 @@ function App() {
 
 	const unfinishedTodos = todos.filter(todo => !todo.completed)
 	const finishedTodos = todos.filter(todo => todo.completed)
-
-
-	// // This will only be executed when the component is mounted,
-	// // and only AFTER the component has been rendered
-	// useEffect(() => {
-	// 	console.log("Look mom, I'm a newly mounted component 👶🏻")
-	// }, [])
-
-	// // This will only be executed if `finishedTodos.length` or `todos.length`
-	// // have changed since last render, and only AFTER the component has been rendered
-	// useEffect( () => {
-	// 	console.log("Updating page title using an effect")
-	// 	document.title = `${finishedTodos.length} of ${todos.length} completed`
-	// }, [finishedTodos.length, todos.length] )
-
-	// console.log("Rendering...")
 
 	return (
 		<div className="container">
@@ -100,10 +85,7 @@ function App() {
 						 />
 						) )}
 					</ul>
-
-					<p className="status">
-						{finishedTodos.length} of {todos.length} todos completed
-					</p>
+							<TodoCounter finishedTodos={finishedTodos.length} todos={todos.length}/>
 				</>
 			)}
 
