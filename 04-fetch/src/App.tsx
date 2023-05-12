@@ -10,6 +10,7 @@ function App() {
 	const [resource, setResource] = useState('posts')
 	const [data, setData] = useState<IResource[]>([])
 	const [state, setState] = useState('')
+	const [isPending, setIsPending] = useState(false)
 
 	
 	
@@ -20,11 +21,14 @@ function App() {
 		}
 
 		const fetchData = async () => {		
+			setIsPending(true)
 			// fetch resource	
 			const res = await fetch(`https://jsonplaceholder.typicode.com/${resource}`)
 
 			// parse response as json
 			const payload = await res.json() as IResource[]
+
+			setIsPending(false)
 
 			// update data state with resource payload 
 			setData(payload)
@@ -46,6 +50,10 @@ function App() {
 				<button onClick={() => setResource('posts')} className="btn btn-warning">Posts</button>
 				<button onClick={() => setResource('todos')} className="btn btn-danger">Todos</button>
 			</div>
+
+			{isPending && (
+				<p>Pending...</p>
+			)}
 
 			{resource && (
 				<>
