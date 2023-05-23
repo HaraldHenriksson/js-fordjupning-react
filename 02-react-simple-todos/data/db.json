@@ -3,7 +3,7 @@
     {
       "id": 1,
       "title": "Make coffee",
-      "completed": true
+      "completed": false
     },
     {
       "id": 2,
@@ -18,7 +18,7 @@
     {
       "id": 4,
       "title": "Drink ALL THE coffee",
-      "completed": false
+      "completed": true
     }
   ]
 }

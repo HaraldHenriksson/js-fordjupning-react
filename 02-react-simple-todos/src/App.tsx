@@ -33,9 +33,17 @@ function App() {
 		getTodos()
 	}
 
-	const toggleTodo = (todo: Todo) => {
-		todo.completed = !todo.completed
-		setTodos([...todos])
+	// toggle to completes status of a todo in the api
+	const toggleTodo = async (todo: Todo) => {
+		if (!todo.id) {
+			return
+		}
+
+		await TodosAPI.updateTodo(todo.id, {
+			completed: !todo.completed
+		})
+
+		getTodos()
 	}
 
 	// fetch todos when App is being mounted
