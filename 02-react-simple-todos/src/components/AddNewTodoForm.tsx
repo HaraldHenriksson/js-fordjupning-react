@@ -28,7 +28,7 @@ const AddNewTodoForm: React.FC<IProps> = ({ onAddTodo }) => {
 
 	useEffect(() => {
 		newTodoTitleRef.current?.focus()
-	})
+	}, [])
 
 	// console.log("AddNewTodoForm rendering...")
 
