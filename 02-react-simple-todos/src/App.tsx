@@ -9,19 +9,28 @@ import * as TodosAPI from './services/TodosAPI'
 function App() {
 	const [todos, setTodos] = useState<Todos>([])
 
+
+	// Get todos from api
 	const getTodos = async () => {
 		const data = await TodosAPI.getTodos()
 		setTodos(data)
 	}
 
+	// create a new todo in the api
 	const addTodo = async (todo: Todo) => {
 		await TodosAPI.createTodo(todo)
 		getTodos()
 	}
 
-	const deleteTodo = (todoToDelete: Todo) => {
-		// set a new list of todos where the clicked todo is excluded
-		setTodos(todos.filter(todo => todo !== todoToDelete))
+	// delete a todo in the api 
+	const deleteTodo = async (todo: Todo) => {
+		if (!todo.id) {
+			return
+		}
+		// Delete todo from the api
+		await TodosAPI.deleteTodo(todo.id)
+		// get todo from api
+		getTodos()
 	}
 
 	const toggleTodo = (todo: Todo) => {
