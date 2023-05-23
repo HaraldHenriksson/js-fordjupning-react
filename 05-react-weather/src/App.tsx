@@ -7,11 +7,23 @@ import Airplane from './assets/images/747.svg'
 import './assets/scss/App.scss'
 
 function App() {
+
+	const [currentWeather, setCurrentWeather] = useState<ICurrentWeather|null>(null)
+
+	const search = async (data: string) => {
+
+		const weather = await getCurrentWeather(data)
+		console.log(weather)
+
+		setCurrentWeather(weather)
+	}
+
+
 	return (
 		<div id="app" className="container">
-			<SearchCity />
+			<SearchCity onSearch={search} />
 
-			<Forecast />
+			{currentWeather && < Forecast  data={currentWeather}/>}
 		</div>
 	)
 }
