@@ -10,8 +10,8 @@ const BASE_URL = 'http://localhost:3000'
  * Get all todos
  */
 export const getTodos = async () => {
-    const res = await axios.get(`${BASE_URL}/todos`)
-    return res.data as Todos
+	const res = await axios.get(`${BASE_URL}/todos`)
+	return res.data as Todos
 }
 
 /**
@@ -20,8 +20,8 @@ export const getTodos = async () => {
  * @param data Object with properties and values for the new todo
  */
 export const createTodo = async (todo: Todo) => {
-    const res = await axios.post(`${BASE_URL}/todos`, todo)
-    return res.data as Todo
+	const res = await axios.post(`${BASE_URL}/todos`, todo)
+	return res.data as Todo
 }
 
 /**
