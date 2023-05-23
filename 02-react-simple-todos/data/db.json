@@ -1,19 +1,24 @@
 {
-  "posts": [
+  "todos": [
     {
       "id": 1,
-      "title": "json-server",
-      "author": "typicode"
-    }
-  ],
-  "comments": [
+      "title": "Make coffee",
+      "completed": true
+    },
     {
-      "id": 1,
-      "body": "some comment",
-      "postId": 1
+      "id": 2,
+      "title": "Drink coffee",
+      "completed": false
+    },
+    {
+      "id": 3,
+      "title": "Drink MOAR coffee",
+      "completed": false
+    },
+    {
+      "id": 4,
+      "title": "Drink ALL THE coffee",
+      "completed": false
     }
-  ],
-  "profile": {
-    "name": "typicode"
-  }
+  ]
 }

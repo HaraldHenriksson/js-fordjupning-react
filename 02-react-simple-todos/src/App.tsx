@@ -14,6 +14,11 @@ function App() {
 		setTodos(data)
 	}
 
+	const addTodo = async (todo: Todo) => {
+		await TodosAPI.createTodo(todo)
+		getTodos()
+	}
+
 	const deleteTodo = (todoToDelete: Todo) => {
 		// set a new list of todos where the clicked todo is excluded
 		setTodos(todos.filter(todo => todo !== todoToDelete))
@@ -24,7 +29,7 @@ function App() {
 		setTodos([...todos])
 	}
 
-	// fetch todos when App is being mounted 
+	// fetch todos when App is being mounted
 	useEffect(() => {
 		getTodos()
 	}, [])
@@ -32,27 +37,36 @@ function App() {
 	const unfinishedTodos = todos.filter(todo => !todo.completed)
 	const finishedTodos = todos.filter(todo => todo.completed)
 
-	const addTodo = (newTodo: Todo) => {
-		setTodos([...todos, newTodo]);
-	  }
+	// console.log("App rendering...")
 
 	return (
-		<div className='container'>
+		<div className="container">
+			<h1 className="mb-3">React Simple Todos</h1>
 
-		<h1 className="mb-3">React Simple Todos</h1>
-		<AddNewTodoForm addTodo={addTodo}/>
+			<AddNewTodoForm onAddTodo={addTodo} />
 
 			{todos.length > 0 && (
 				<>
-				<TodoList todos={unfinishedTodos} onToggle={toggleTodo} onDelete={deleteTodo} />
-				<TodoList todos={finishedTodos} onToggle={toggleTodo} onDelete={deleteTodo} />
-				<TodoCounter finishedTodos={finishedTodos.length} todos={todos.length}/>
-			</>
+					<TodoList
+						onToggle={toggleTodo}
+						onDelete={deleteTodo}
+						todos={unfinishedTodos}
+					/>
+
+					<TodoList
+						onToggle={toggleTodo}
+						onDelete={deleteTodo}
+						todos={finishedTodos}
+					/>
+
+					<TodoCounter finished={finishedTodos.length} total={todos.length} />
+				</>
 			)}
 
 			{todos.length === 0 && (
 				<p>Yayyy, you have 0 todos to do</p>
 			)}
+
 		</div>
 	)
 }
