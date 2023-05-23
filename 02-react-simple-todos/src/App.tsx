@@ -1,17 +1,18 @@
-import { useState } from 'react'
-import { Todo, TodoList as TodoListType } from './types'
+import { useEffect, useState } from 'react'
+import { Todo, Todos } from './types'
 import './assets/scss/App.scss'
 import TodoCounter from './components/TodoCounter'
-import AddNewTodoForm from './components/AddNewTodoForm'
 import TodoList from './components/TodoList'
+import AddNewTodoForm from './components/AddNewTodoForm'
+import * as TodosAPI from './services/TodosAPI'
 
 function App() {
-	const [todos, setTodos] = useState<TodoListType>([
-		{ title: "Make coffee", completed: true },
-		{ title: "Drink coffee", completed: false },
-		{ title: "Drink MOAR coffee", completed: false },
-		{ title: "Drink ALL THE coffee", completed: false },
-	])
+	const [todos, setTodos] = useState<Todos>([])
+
+	const getTodos = async () => {
+		const data = await TodosAPI.getTodos()
+		setTodos(data)
+	}
 
 	const deleteTodo = (todoToDelete: Todo) => {
 		// set a new list of todos where the clicked todo is excluded
@@ -22,6 +23,11 @@ function App() {
 		todo.completed = !todo.completed
 		setTodos([...todos])
 	}
+
+	// fetch todos when App is being mounted 
+	useEffect(() => {
+		getTodos()
+	}, [])
 
 	const unfinishedTodos = todos.filter(todo => !todo.completed)
 	const finishedTodos = todos.filter(todo => todo.completed)
