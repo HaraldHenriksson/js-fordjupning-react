@@ -8,14 +8,20 @@ import './assets/scss/App.scss'
 
 function App() {
 
+	const [loading, setLoading] = useState(false)
+
 	const [currentWeather, setCurrentWeather] = useState<ICurrentWeather|null>(null)
 
 	const search = async (data: string) => {
+
+		setLoading(true)
 
 		const weather = await getCurrentWeather(data)
 		console.log(weather)
 
 		setCurrentWeather(weather)
+
+		setLoading(false)
 	}
 
 
@@ -23,7 +29,7 @@ function App() {
 		<div id="app" className="container">
 			<SearchCity onSearch={search} />
 
-			{currentWeather && < Forecast  data={currentWeather}/>}
+			{loading ? <img src={Airplane} alt={"Loading..."} /> : currentWeather && < Forecast  data={currentWeather}/>}
 		</div>
 	)
 }
