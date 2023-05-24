@@ -17,7 +17,7 @@ const Forecast: React.FC<Iprops> = ({ data }) => {
 		<div id="forecast">
 			<div className="card">
 
-				<img src={forecastBanner} className="card-img-top" alt="Daytime, nighttime, daytime, nighttime"/>
+				<img src={forecastBanner} className="card-img-top" alt="Daytime, nighttime, daytime, nighttime" />
 
 				<div className="card-body">
 					<h5 className="card-title" id="location">

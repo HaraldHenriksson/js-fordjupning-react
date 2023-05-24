@@ -15,6 +15,11 @@ function App() {
 	const [currentWeather, setCurrentWeather] = useState<ICurrentWeather | null>(null)
 
 	const search = async (data: string) => {
+
+		if (data.length < 3) {
+			setError('Has to be at least 3 characters')
+			return
+		}
 		setLoading(true);
 		setError(null);
 		try {
