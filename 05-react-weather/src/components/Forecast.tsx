@@ -8,11 +8,9 @@ interface Iprops {
 
 const Forecast: React.FC<Iprops> = ({ data }) => {
 
-	// const [newData, setNewData] = useState(null)
+	const freshness = new Date(data.dt * 1000).toLocaleString()
 
-	// const handleData = (e: React.FormEvent) {
-	// 	newWeather(newData)
-	// }
+
 	return (
 		<div id="forecast">
 			<div className="card">
@@ -48,13 +46,13 @@ const Forecast: React.FC<Iprops> = ({ data }) => {
 						))}
 					</ul>
 
-					{/*
+
 					<p className="text-muted small">
 						<span>
-							1970-01-01 13:37:00
+							{freshness}
 						</span>
 					</p>
-				*/}
+
 				</div>
 
 			</div>
