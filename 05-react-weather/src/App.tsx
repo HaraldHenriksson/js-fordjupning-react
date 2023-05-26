@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Forecast from './components/Forecast'
 import SearchCity from './components/SearchCity'
 import { getCurrentWeather } from './services/owmapi'

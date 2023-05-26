@@ -1,12 +1,17 @@
-import React, { useState } from 'react'
+import React from 'react'
 import forecastBanner from '../assets/images/forecast-banner.png'
-import { IWeather, ICurrentWeather } from '../types'
+import { ICurrentWeather } from '../types'
+import dayBanner from '../assets/images/day.svg'
+import nightBanner from '../assets/images/night.svg'
 
 interface Iprops {
 	data: ICurrentWeather
 }
 
 const Forecast: React.FC<Iprops> = ({ data }) => {
+	const banner = data.dt > data.sys.sunrise && data.dt < data.sys.sunset
+		? dayBanner
+		: nightBanner
 
 	const freshness = new Date(data.dt * 1000).toLocaleString()
 
@@ -15,7 +20,7 @@ const Forecast: React.FC<Iprops> = ({ data }) => {
 		<div id="forecast">
 			<div className="card">
 
-				<img src={forecastBanner} className="card-img-top" alt="Daytime, nighttime, daytime, nighttime" />
+				<img src={banner} className="card-img-top" alt="Daytime, nighttime, daytime, nighttime" />
 
 				<div className="card-body">
 					<h5 className="card-title" id="location">
