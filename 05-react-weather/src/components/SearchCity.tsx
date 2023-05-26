@@ -4,7 +4,7 @@ interface Iprops {
 	onSearch: (searchInput: string) => void
 }
 
-const SearchCity: React.FC<Iprops> = ( { onSearch }) => {
+const SearchCity: React.FC<Iprops> = ({ onSearch }) => {
 
 	const [searchInput, setSearchInput] = useState('')
 
@@ -12,12 +12,16 @@ const SearchCity: React.FC<Iprops> = ( { onSearch }) => {
 		e.preventDefault()
 
 		onSearch(searchInput)
+
+		setSearchInput('')
 	}
+
+	const tooFewCharacters = searchInput.trim().length > 0 && searchInput.trim().length < 3
 
 	return (
 		<div id="search-wrapper">
 			<form id="search-form"
-					onSubmit={handleSubmit}>
+				onSubmit={handleSubmit}>
 				<div className="input-group">
 					<input
 						type="text"
@@ -28,10 +32,16 @@ const SearchCity: React.FC<Iprops> = ( { onSearch }) => {
 					/>
 
 					<button
+						disabled={searchInput.trim().length < 3}
 						type="submit"
 						className="btn btn-success"
 					>🔍</button>
 				</div>
+
+				{tooFewCharacters && (
+					<div className="form-text" role="alert">
+						Please enter at least 3 characters
+					</div>)}
 			</form>
 		</div>
 	)

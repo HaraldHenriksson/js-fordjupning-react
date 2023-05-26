@@ -38,10 +38,6 @@ function App() {
 
 			{loading ? (
 				<img src={Airplane} alt={"Loading..."} />
-			) : error ? (
-				<div className="alert alert-danger" role="alert">
-					{error}
-				</div>
 			) : (
 				currentWeather && < Forecast data={currentWeather} />
 			)}
