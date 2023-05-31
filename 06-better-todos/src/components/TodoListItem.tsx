@@ -11,7 +11,7 @@ interface IProps {
 const TodoListItem: React.FC<IProps> = ({ todo, onDelete, onToggle }) => {
 
 	return (
-		<li className={todo.completed ? 'done' : ''}>
+		<div className={todo.completed ? 'done' : ''}>
 
 			<span className="ms-1">
 				<Button variant="success" className="todo-toggle" onClick={() => onToggle(todo)} role="button">
@@ -21,7 +21,7 @@ const TodoListItem: React.FC<IProps> = ({ todo, onDelete, onToggle }) => {
 					Delete
 				</Button>
 			</span>
-		</li>
+		</div>
 	)
 }
 
