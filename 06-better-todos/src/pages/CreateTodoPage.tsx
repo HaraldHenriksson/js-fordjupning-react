@@ -1,20 +1,34 @@
-import React from 'react';
+import { useState } from 'react';
 import AddNewTodoForm from '../components/AddNewTodoForm';
 import { Todo } from '../types';
-import * as TodosAPI from '../services/TodosAPI'
+import * as TodosAPI from '../services/TodosAPI';
+import { Alert } from 'react-bootstrap';
 
 const CreateTodoPage = () => {
+    const [alertVisible, setAlertVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+
     const handleAddTodo = async (newTodo: Todo) => {
         try {
-            const createdTodo = await TodosAPI.createTodo(newTodo)
-            console.log('todo created', createdTodo)
-        } catch (err) {
-            console.log('Error creating todo', err)
+            const createdTodo = await TodosAPI.createTodo(newTodo);
+            setAlertVisible(true);
+            setAlertMessage('Todo created successfully!');
+            console.log('Todo created:', createdTodo);
+        } catch (error) {
+            console.error('Error creating todo:', error);
         }
     };
 
     return (
-        <AddNewTodoForm onAddTodo={handleAddTodo} />
+        <>
+            {alertVisible && (
+                <Alert variant="success" onClose={() => setAlertVisible(false)} dismissible>
+                    {alertMessage}
+                </Alert>
+            )}
+
+            <AddNewTodoForm onAddTodo={handleAddTodo} />
+        </>
     );
 };
 
