@@ -34,6 +34,11 @@
       "title": "Clean car",
       "completed": false,
       "id": 7
+    },
+    {
+      "title": "Clean apartment",
+      "completed": false,
+      "id": 8
     }
   ]
 }
