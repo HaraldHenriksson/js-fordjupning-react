@@ -28,6 +28,9 @@ const Navigation = () => {
                         <Nav.Link as={NavLink} to="/todos" onClick={handleNavCollapse}>
                             Todos
                         </Nav.Link>
+                        <Nav.Link as={NavLink} to="/create" onClick={handleNavCollapse}>
+                            Create
+                        </Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

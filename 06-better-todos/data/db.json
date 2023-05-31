@@ -14,6 +14,21 @@
       "title": "Learn stuff",
       "completed": true,
       "id": 3
+    },
+    {
+      "title": "hello",
+      "completed": false,
+      "id": 4
+    },
+    {
+      "title": "new todo",
+      "completed": false,
+      "id": 5
+    },
+    {
+      "title": "haha mf",
+      "completed": false,
+      "id": 6
     }
   ]
 }
