@@ -8,12 +8,9 @@ import { useNavigate } from 'react-router-dom';
 
 const TodoPage = () => {
 
-
     const { id } = useParams()
     const todoId = Number(id)
-
     const [todo, setTodo] = useState<Todo | null>(null)
-
     const navigate = useNavigate();
 
     // Get todo from API
@@ -60,7 +57,7 @@ const TodoPage = () => {
             // Remove the todo from state
             setTodo(null);
 
-            navigate('/todos');
+            navigate('/todos', { state: { message: 'Todo deleted successfully' } })
         } catch (error) {
             console.log('Error deleting todo', error);
         }

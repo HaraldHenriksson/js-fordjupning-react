@@ -4,10 +4,13 @@ import { ListGroup } from 'react-bootstrap'
 import AddNewTodoForm from '../components/AddNewTodoForm'
 import * as TodosAPI from '../services/TodosAPI'
 import { Link } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
+import Alert from 'react-bootstrap/Alert'
 
 const TodosPage = () => {
-
+    const location = useLocation();
     const [todos, setTodos] = useState<Todos>([])
+    const [showAlert, setShowAlert] = useState(true)
 
     // Get todos from api
     const getTodos = async () => {
@@ -21,43 +24,26 @@ const TodosPage = () => {
         getTodos()
     }
 
-    {/*
-    // Delete a todo in the api
-    const deleteTodo = async (todo: Todo) => {
-        if (!todo.id) {
-            return
-        }
-        
-        // Delete todo from the api
-        await TodosAPI.deleteTodo(todo.id)
-        
-        // Get all the todos from the api
-        getTodos()
-    }
-    
-    // Toggle the completed status of a todo in the api
-    const toggleTodo = async (todo: Todo) => {
-        if (!todo.id) {
-            return
-        }
-        
-        // Update a todo in the api
-        await TodosAPI.updateTodo(todo.id, {
-            completed: !todo.completed
-        })
-        
-        // Get all the todos from the api
-        getTodos()
-    }
-    */}
     // fetch todos when App is being mounted
     useEffect(() => {
         getTodos()
     }, [])
 
+    useEffect(() => {
+        if (location.state?.message) {
+            const timer = setTimeout(() => {
+                setShowAlert(false)
+            }, 2000)
+
+            // Clean up function
+            return () => clearTimeout(timer)
+        }
+    }, [location])
+
     return (
         <>
-            {/* <h1 className="mb-3">React Simple Todos</h1> */}
+
+            {showAlert && location.state?.message && <Alert variant='success'>{location.state.message}</Alert>}
 
             <AddNewTodoForm onAddTodo={addTodo} />
 
