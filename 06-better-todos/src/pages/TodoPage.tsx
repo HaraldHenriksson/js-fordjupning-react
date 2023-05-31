@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import { Todo } from '../types'
 import * as TodosAPI from '../services/TodosAPI'
 import TodoListItem from '../components/TodoListItem'
+import { useNavigate } from 'react-router-dom';
 
 const TodoPage = () => {
 
@@ -12,6 +13,8 @@ const TodoPage = () => {
     const todoId = Number(id)
 
     const [todo, setTodo] = useState<Todo | null>(null)
+
+    const navigate = useNavigate();
 
     // Get todo from API
     const getTodo = async (id: number) => {
@@ -56,9 +59,12 @@ const TodoPage = () => {
 
             // Remove the todo from state
             setTodo(null);
+
+            navigate('/todos');
         } catch (error) {
             console.log('Error deleting todo', error);
         }
+
     };
 
     if (!todo) {
