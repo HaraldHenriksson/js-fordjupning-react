@@ -4,10 +4,14 @@ import { useParams } from 'react-router-dom'
 import * as TodosAPI from '../services/TodosAPI'
 import AddNewTodoForm from '../components/AddNewTodoForm'
 import { Todo } from '../types'
+import { Alert } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
 
 const EditTodoPage = () => {
     const { id } = useParams()
     const [todo, setTodo] = useState<Todo | null>(null)
+    const [success, setSuccess] = useState<boolean | null>(null)
+    const navigate = useNavigate()
 
     useEffect(() => {
 
@@ -22,7 +26,18 @@ const EditTodoPage = () => {
 
     const handleEditTodo = async (updatedTodo: Todo) => {
 
-        await TodosAPI.updateTodo(Number(id), updatedTodo)
+        try {
+            await TodosAPI.updateTodo(Number(id), updatedTodo)
+
+            setTimeout(() => {
+                navigate(`/todos/${id}`)
+            }, 2000)
+
+            setSuccess(!!updatedTodo)
+
+        } catch (err) {
+            setSuccess(false)
+        }
 
     }
 
@@ -31,7 +46,17 @@ const EditTodoPage = () => {
     }
 
     return (
-        <AddNewTodoForm initialData={todo} onAddTodo={handleEditTodo} />
+        <>
+            {success === true && (
+                <Alert variant="success" className="mt-3">Todo edited!</Alert>
+            )}
+
+            {success === false && (
+                <Alert variant="warning" className="mt-3">Todo could not be edited 😔</Alert>
+            )}
+
+            <AddNewTodoForm initialData={todo} onAddTodo={handleEditTodo} />
+        </>
     )
 }
 
