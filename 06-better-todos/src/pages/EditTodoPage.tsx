@@ -1,10 +1,10 @@
 // EditTodoPage.tsx
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import * as TodosAPI from '../services/TodosAPI'
 import AddNewTodoForm from '../components/AddNewTodoForm'
 import { Todo } from '../types'
-import { Alert } from 'react-bootstrap'
+import { Alert, Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 
 const EditTodoPage = () => {
@@ -56,6 +56,10 @@ const EditTodoPage = () => {
             )}
 
             <AddNewTodoForm initialData={todo} onAddTodo={handleEditTodo} />
+
+            <Link to={`/todos/${id}`}>
+                <Button variant='secondary'>&laquo; Back</Button>
+            </Link>
         </>
     )
 }
