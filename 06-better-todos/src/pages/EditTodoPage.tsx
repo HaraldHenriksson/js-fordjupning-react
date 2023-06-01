@@ -6,18 +6,14 @@ import AddNewTodoForm from '../components/AddNewTodoForm'
 import { Todo } from '../types'
 
 const EditTodoPage = () => {
-    const { id: idParam } = useParams()
-    const id = Number(idParam)
+    const { id } = useParams()
     const [todo, setTodo] = useState<Todo | null>(null)
 
     useEffect(() => {
-        const fetchTodo = async () => {
-            if (isNaN(id)) {
-                // Handle the case where id is not a number
-                return
-            }
 
-            const fetchedTodo = await TodosAPI.getTodo(id)
+        const fetchTodo = async () => {
+
+            const fetchedTodo = await TodosAPI.getTodo(Number(id))
             setTodo(fetchedTodo)
         }
 
@@ -25,10 +21,9 @@ const EditTodoPage = () => {
     }, [id])
 
     const handleEditTodo = async (updatedTodo: Todo) => {
-        if (!isNaN(id)) {
-            await TodosAPI.updateTodo(id, updatedTodo)
-            // handle navigation or other actions after editing the todo
-        }
+
+        await TodosAPI.updateTodo(Number(id), updatedTodo)
+
     }
 
     if (!todo) {
