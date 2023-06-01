@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Todo, Todos } from '../types'
+import { Todos } from '../types'
 import { ListGroup } from 'react-bootstrap'
-import AddNewTodoForm from '../components/AddNewTodoForm'
+// import AddNewTodoForm from '../components/AddNewTodoForm'
 import * as TodosAPI from '../services/TodosAPI'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
 import Alert from 'react-bootstrap/Alert'
+import SortTodos from '../components/SortTodos'
 
 const TodosPage = () => {
     const location = useLocation();
@@ -19,10 +20,10 @@ const TodosPage = () => {
     }
 
     // Create a new todo in the API
-    const addTodo = async (todo: Todo) => {
-        await TodosAPI.createTodo(todo)
-        getTodos()
-    }
+    // const addTodo = async (todo: Todo) => {
+    //     await TodosAPI.createTodo(todo)
+    //     getTodos()
+    // }
 
     // fetch todos when App is being mounted
     useEffect(() => {
@@ -40,12 +41,30 @@ const TodosPage = () => {
         }
     }, [location])
 
+    const handleSortChange = (selectedOption: string) => {
+        setTodos(prevTodos => {
+            const sortedTodos = [...prevTodos].sort((a, b) => {
+                if (selectedOption === 'completedFirst') {
+                    return a.completed === b.completed ? 0 : a.completed ? -1 : 1
+                } else if (selectedOption === 'notCompletedFirst') {
+                    return a.completed === b.completed ? 0 : a.completed ? 1 : -1
+                } else {
+                    return a.title.localeCompare(b.title)
+                }
+            })
+
+            return sortedTodos
+        })
+    }
+
     return (
         <>
 
             {showAlert && location.state?.message && <Alert variant='success'>{location.state.message}</Alert>}
 
-            <AddNewTodoForm onAddTodo={addTodo} />
+            {/* <AddNewTodoForm onAddTodo={addTodo} /> */}
+
+            <SortTodos handleSortChange={handleSortChange}></SortTodos>
 
             {todos.length > 0 && (
                 <>
