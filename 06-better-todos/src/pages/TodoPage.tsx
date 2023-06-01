@@ -60,7 +60,7 @@ const TodoPage = () => {
             // Remove the todo from state
             setTodo(null);
 
-            navigate('/todos', { state: { message: 'Todo deleted successfully' } })
+            navigate('/todos', { state: { message: 'Todo deleted successfully' }, replace: true })
         } catch (error) {
             console.log('Error deleting todo', error);
         }

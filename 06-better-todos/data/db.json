@@ -19,16 +19,6 @@
       "title": "Clean car",
       "completed": true,
       "id": 7
-    },
-    {
-      "title": "edited todo",
-      "completed": false,
-      "id": 8
-    },
-    {
-      "title": "editing some todos",
-      "completed": false,
-      "id": 9
     }
   ]
 }
