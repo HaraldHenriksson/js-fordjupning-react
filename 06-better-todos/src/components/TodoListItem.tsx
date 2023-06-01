@@ -15,8 +15,11 @@ const TodoListItem: React.FC<IProps> = ({ todo, onDelete, onToggle }) => {
 
 			<span className="ms-1">
 				<Button variant="success" className="todo-toggle" onClick={() => onToggle(todo)} role="button">
-					{todo.completed ? '☑️' : '✅'}
+					{'Toggle'}
 				</Button>
+				{/* <Button variant="outline-secondary" className="todo-edit" onClick={() => onEdit(todo)} role="button">
+					{'Edit'}
+				</Button> */}
 				<Button variant="danger" className="todo-delete" onClick={() => onDelete(todo)} role="button">
 					Delete
 				</Button>

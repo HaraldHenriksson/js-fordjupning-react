@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
+import { Modal } from 'react-bootstrap'
 import { Link, useParams } from 'react-router-dom'
 import { Todo } from '../types'
 import * as TodosAPI from '../services/TodosAPI'
@@ -11,7 +12,8 @@ const TodoPage = () => {
     const { id } = useParams()
     const todoId = Number(id)
     const [todo, setTodo] = useState<Todo | null>(null)
-    const navigate = useNavigate();
+    const navigate = useNavigate()
+    const [showModal, setShowModal] = useState(false)
 
     // Get todo from API
     const getTodo = async (id: number) => {
@@ -46,11 +48,12 @@ const TodoPage = () => {
         }
     };
 
-    const onDelete = async (todoToDelete: Todo) => {
+    const handleDelete = async (todoToDelete: Todo) => {
         try {
             if (todoToDelete.id === undefined) {
                 return;
             }
+
             // Delete todo in the backend API
             await TodosAPI.deleteTodo(todoToDelete.id);
 
@@ -61,8 +64,7 @@ const TodoPage = () => {
         } catch (error) {
             console.log('Error deleting todo', error);
         }
-
-    };
+    }
 
     if (!todo) {
         return (<p>Loading...</p>)
@@ -74,11 +76,26 @@ const TodoPage = () => {
 
             <p><strong>Status:</strong> {todo.completed ? 'Completed' : 'Not completed'}</p>
 
-            <TodoListItem todo={todo} onDelete={onDelete} onToggle={onToggle} />
+            <TodoListItem todo={todo} onDelete={() => setShowModal(true)} onToggle={onToggle} />
 
             <Link to={'/todos'}>
                 <Button variant='secondary'>&laquo; All todos</Button>
             </Link>
+
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm Delete</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Are you sure you want to delete this todo?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Cancel
+                    </Button>
+                    <Button variant="danger" onClick={() => handleDelete(todo)}>
+                        Delete
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     )
 }
