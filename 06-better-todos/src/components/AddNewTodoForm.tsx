@@ -4,9 +4,10 @@ import { Todo } from '../types'
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
 	onAddTodo: (todo: Todo) => void
+	initialData?: Todo
 }
 
-const AddNewTodoForm: React.FC<IProps> = ({ onAddTodo }) => {
+const AddNewTodoForm: React.FC<IProps> = ({ onAddTodo, initialData }) => {
 	const [newTodoTitle, setNewTodoTitle] = useState("")
 	const newTodoTitleRef = useRef<HTMLInputElement>(null)
 
@@ -30,6 +31,12 @@ const AddNewTodoForm: React.FC<IProps> = ({ onAddTodo }) => {
 		newTodoTitleRef.current?.focus()
 	}, [])
 
+	useEffect(() => {
+		if (initialData) {
+			setNewTodoTitle(initialData.title)
+		}
+	}, [initialData])
+
 	// console.log("AddNewTodoForm rendering...")
 
 	return (
@@ -48,7 +55,7 @@ const AddNewTodoForm: React.FC<IProps> = ({ onAddTodo }) => {
 					disabled={!newTodoTitle.trim()}
 					type="submit"
 					className="btn btn-success"
-				>Create</button>
+				>{initialData ? 'Update' : 'Create'}</button>
 			</div>
 		</form>
 	)
