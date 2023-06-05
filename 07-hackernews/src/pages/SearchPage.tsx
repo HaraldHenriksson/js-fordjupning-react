@@ -1,23 +1,30 @@
 import { useEffect, useRef, useState } from 'react'
+import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import ListGroup from 'react-bootstrap/ListGroup'
 import { searchByDate as HN_searchByDate } from '../services/HackerNewsAPI'
 import { HN_SearchResponse } from '../types'
+import HandlePage from '../components/HandlePage'
 
 const SearchPage = () => {
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
+    const [currentPage, setCurrentPage] = useState(0)
     const [searchInput, setSearchInput] = useState("")
     const [searchResult, setSearchResult] = useState<HN_SearchResponse | null>(null)
+    const queryRef = useRef("")
 
-    const searchHackerNews = async (searchQuery: string) => {
+    const searchHackerNews = async (searchQuery: string, searchPage = 0) => {
         setError(null)
         setLoading(true)
         setSearchResult(null)
 
+        // save searchQuery to queryRef
+        queryRef.current = searchQuery
+
         try {
-            const res = await HN_searchByDate(searchQuery)
+            const res = await HN_searchByDate(searchQuery, searchPage)
             setSearchResult(res)
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -37,8 +44,18 @@ const SearchPage = () => {
         }
 
         // search HN
-        searchHackerNews(searchInput)
+        setCurrentPage(0)
+        searchHackerNews(searchInput, 0)
     }
+
+    // react to changes in our page state
+    useEffect(() => {
+        if (!queryRef.current) {
+            return
+        }
+
+        searchHackerNews(queryRef.current, currentPage)
+    }, [currentPage])
 
     return (
         <>
@@ -65,18 +82,20 @@ const SearchPage = () => {
                 </div>
             </Form>
 
+            {error && <Alert variant='warning'>{error}</Alert>}
+
             {loading && <p>🤔 Loading...</p>}
 
             {searchResult && (
                 <div id="search-result">
-                    <p>Showing {searchResult.nbHits} search results for {searchInput}...</p>
+                    <p>Showing {searchResult.nbHits} search results for {queryRef.current}...</p>
 
                     <ListGroup className="mb-3">
                         {searchResult.hits.map(hit => (
                             <ListGroup.Item
                                 action
                                 href={hit.url}
-                                key={hit.objectID}
+                                key={hit.objectId}
                             >
                                 <h2 className="h3">{hit.title}</h2>
                                 <p className="text-muted small mb-0">
@@ -86,21 +105,14 @@ const SearchPage = () => {
                         ))}
                     </ListGroup>
 
-                    <div className="d-flex justify-content-between align-items-center">
-                        <div className="prev">
-                            <Button
-                                variant="primary"
-                            >Previous Page</Button>
-                        </div>
-
-                        <div className="page">PAGE</div>
-
-                        <div className="next">
-                            <Button
-                                variant="primary"
-                            >Next Page</Button>
-                        </div>
-                    </div>
+                    <HandlePage
+                        currentPage={currentPage}
+                        totalPages={searchResult.nbPages}
+                        hasPreviousPage={currentPage <= 0}
+                        hasNextPage={currentPage + 1 >= searchResult.nbPages}
+                        onPreviousPage={() => { setCurrentPage(prevValue => prevValue - 1) }}
+                        onNextPage={() => { setCurrentPage(prevValue => prevValue + 1) }}
+                    />
                 </div>
             )}
         </>
