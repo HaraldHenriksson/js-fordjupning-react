@@ -23,7 +23,7 @@ const HandlePage: React.FC<HandlePageProps> = ({
         <div className="d-flex justify-content-between align-items-center">
             <div className="prev">
                 <Button
-                    disabled={!hasNextPage}
+                    disabled={!hasPreviousPage}
                     onClick={onPreviousPage}
                     variant="primary"
                 >Previous Page</Button>
@@ -33,7 +33,7 @@ const HandlePage: React.FC<HandlePageProps> = ({
 
             <div className="next">
                 <Button
-                    disabled={!hasPreviousPage}
+                    disabled={!hasNextPage}
                     onClick={onNextPage}
                     variant="primary"
                 >Next Page</Button>
