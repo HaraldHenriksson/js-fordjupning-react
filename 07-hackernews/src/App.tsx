@@ -5,14 +5,18 @@ import HomePage from './pages/HomePage'
 import './assets/scss/App.scss'
 import NotFound from './pages/NotFound'
 import SearchPage from './pages/SearchPage'
-import { useContext } from 'react'
-import { ThemeContext } from './Contexts/ThemeProvider'
+import useThemeContext from './hooks/useThemeContext'
+import classNames from 'classnames'
 
 const App = () => {
-  const { isDarkMode } = useContext(ThemeContext)
+  const { isDarkMode } = useThemeContext()
+
+  const cssClasses = classNames({
+    'bg-dark text-white': isDarkMode,
+  })
 
   return (
-    <div id="App" className={isDarkMode ? 'bg-dark text-white' : ''}>
+    <div id="App" className={cssClasses}>
       <Navigation />
 
       <Container className="py-3">
