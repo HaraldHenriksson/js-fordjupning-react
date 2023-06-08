@@ -7,6 +7,7 @@ import NotFound from './pages/NotFound'
 import SearchPage from './pages/SearchPage'
 import useThemeContext from './hooks/useThemeContext'
 import classNames from 'classnames'
+import RandomDogPage from './pages/RandomDogPage'
 
 const App = () => {
   const { isDarkMode } = useThemeContext()
@@ -22,6 +23,7 @@ const App = () => {
       <Container className="py-3">
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/random-dog" element={<RandomDogPage />} />
           <Route path="/search" element={<SearchPage />} />
 
           <Route path="*" element={<NotFound />} />
