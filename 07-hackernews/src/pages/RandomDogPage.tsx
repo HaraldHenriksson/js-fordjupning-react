@@ -1,10 +1,10 @@
 import Button from 'react-bootstrap/Button'
 import Image from 'react-bootstrap/Image'
 import useGetData from '../hooks/useGetData'
-import { Spinner } from 'react-bootstrap'
+import { Alert, Spinner } from 'react-bootstrap'
 
 const RandomDogPage = () => {
-    const { data, changeUrl, execute } = useGetData("https://dog.ceo/api/breeds/image/random")
+    const { data, changeUrl, execute, error, isLoading } = useGetData("https://dog.ceo/api/breeds/image/random")
 
     return (
         <>
@@ -27,9 +27,11 @@ const RandomDogPage = () => {
                 >MOAR!!</Button>
             </div>
 
-            {!data && <Spinner animation="border" role="status">
+            {isLoading && <Spinner animation="border" role="status">
                 <span className="visually-hidden">Loading...</span>
             </Spinner>}
+
+            {error && <Alert variant='warning'>{error}</Alert>}
 
             <div>
                 {data && data.status === "success" && <Image src={data.message} fluid />}
