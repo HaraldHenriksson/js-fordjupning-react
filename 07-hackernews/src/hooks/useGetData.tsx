@@ -1,29 +1,31 @@
 import { useEffect, useState } from "react"
-import { DogAPI_RandomImageResponse } from '../types'
 import axios from 'axios'
 
-const useGetData = (initialUrl: string | null = null) => {
-    const [data, setData] = useState<DogAPI_RandomImageResponse | null>(null)
-    const [url, setUrl] = useState<string | null>(initialUrl)
+const useGetData = <T = any>(initialUrl: string | null = null) => {
+    const [data, setData] = useState<T | null>(null)
     const [error, setError] = useState<string | null>(null)
+    const [isError, setIsError] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const [url, setUrl] = useState<string | null>(initialUrl)
 
     const changeUrl = (_url: string) => {
-        // validate url
+        // validate that the `url` actually is a valid URL
         try {
             const url = new URL(_url)
             setUrl(url.toString())
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
-            setError('Thats not a valid URL!')
+            setError("That's not a valid URL!")
+            setIsError(true)
         }
-
     }
 
     const execute = () => {
         if (!url) {
             return
         }
+
         getData(url)
     }
 
@@ -31,16 +33,18 @@ const useGetData = (initialUrl: string | null = null) => {
         // reset state
         setData(null)
         setError(null)
+        setIsError(false)
         setIsLoading(true)
 
         try {
-            const res = await axios.get<DogAPI_RandomImageResponse>(resourceUrl)
-            // await new Promise(r => setTimeout(r, 3000))
+            const res = await axios.get<T>(resourceUrl)
+            await new Promise(r => setTimeout(r, 3000))
             setData(res.data)
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             setError(err.message)
+            setIsError(true)
         }
 
         setIsLoading(false)
@@ -58,8 +62,9 @@ const useGetData = (initialUrl: string | null = null) => {
         changeUrl,
         data,
         error,
-        isLoading,
         execute,
+        isError,
+        isLoading,
     }
 }
 

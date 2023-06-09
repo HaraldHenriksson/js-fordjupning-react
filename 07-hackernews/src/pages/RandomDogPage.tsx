@@ -2,9 +2,11 @@ import Button from 'react-bootstrap/Button'
 import Image from 'react-bootstrap/Image'
 import useGetData from '../hooks/useGetData'
 import { Alert, Spinner } from 'react-bootstrap'
+import { DogAPI_RandomImageResponse } from '../types'
 
 const RandomDogPage = () => {
-    const { data, changeUrl, execute, error, isLoading } = useGetData("https://dog.ceo/api/breeds/image/random")
+    const { data, changeUrl, execute, error, isError, isLoading } =
+        useGetData<DogAPI_RandomImageResponse>()
 
     return (
         <>
@@ -31,7 +33,7 @@ const RandomDogPage = () => {
                 <span className="visually-hidden">Loading...</span>
             </Spinner>}
 
-            {error && <Alert variant='warning'>{error}</Alert>}
+            {isError && <Alert variant='warning'>{error}</Alert>}
 
             <div>
                 {data && data.status === "success" && <Image src={data.message} fluid />}
