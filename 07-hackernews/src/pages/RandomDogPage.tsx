@@ -4,7 +4,7 @@ import useGetData from '../hooks/useGetData'
 import { Spinner } from 'react-bootstrap'
 
 const RandomDogPage = () => {
-    const { data, setUrl } = useGetData("https://dog.ceo/api/breeds/image/random")
+    const { data, changeUrl, execute } = useGetData("https://dog.ceo/api/breeds/image/random")
 
     return (
         <>
@@ -13,13 +13,18 @@ const RandomDogPage = () => {
             <div>
                 <Button
                     variant="primary"
-                    onClick={() => setUrl("https://dog.ceo/api/breeds/image/random")}
+                    onClick={() => changeUrl("https://dog.ceo/api/breeds/image/random")}
                 >Random Doggo</Button>
 
                 <Button
                     variant="primary"
-                    onClick={() => setUrl("https://dog.ceo/api/breed/boxer/images/random")}
+                    onClick={() => changeUrl("https://dog.ceo/api/breed/boxer/images/random")}
                 >Random Boxer Doggo</Button>
+
+                <Button
+                    variant="primary"
+                    onClick={() => execute()}
+                >MOAR!!</Button>
             </div>
 
             {!data && <Spinner animation="border" role="status">
