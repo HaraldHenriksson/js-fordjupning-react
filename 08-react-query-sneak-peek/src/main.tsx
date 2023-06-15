@@ -6,7 +6,13 @@ import ThemeContextProvider from './contexts/ThemeContextProvider.tsx'
 import App from './App.tsx'
 
 // Create a React Query Client and set default behaviour & options
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			refetchOnWindowFocus: false,
+		}
+	}
+})
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<React.StrictMode>
