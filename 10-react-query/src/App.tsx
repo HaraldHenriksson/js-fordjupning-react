@@ -5,6 +5,7 @@ import Navigation from './pages/partials/Navigation';
 import './assets/scss/App.scss'
 import HomePage from './HomePage';
 import PageNotFound from './pages/PageNotFound';
+import RandomCatPage from './pages/RandomCatPage';
 
 const App = () => {
 
@@ -16,10 +17,10 @@ const App = () => {
         <Container className='py-3'>
           <Routes>
             <Route path='/' element={<HomePage />} />
+            <Route path='/random-cat' element={<RandomCatPage />} />
 
             <Route path='*' element={<PageNotFound />} />
           </Routes>
-          <h1>React Query</h1>
         </Container>
       </div>
     </>
