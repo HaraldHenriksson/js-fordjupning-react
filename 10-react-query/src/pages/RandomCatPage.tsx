@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { Alert, Image } from "react-bootstrap"
+import { Alert, Button, Image } from "react-bootstrap"
 import { getRandomCat } from "../services/TheCatAPI"
 
 const RandomCatPage = () => {
@@ -7,6 +7,8 @@ const RandomCatPage = () => {
     const {
         data,
         error,
+        isFetching,
+        refetch,
     } = useQuery(["random-cat"], getRandomCat)
 
     if (error) {
@@ -19,6 +21,20 @@ const RandomCatPage = () => {
         <>
             <h1>Random Cat</h1>
             <div className="ms-auto d-flex justify-content-center" >
+
+                {!isFetching && (
+                    <div className="mb-3">
+                        <Button onClick={() => refetch()} variant="primary">
+                            Next
+                        </Button>
+                    </div>
+                )}
+
+
+
+                {isFetching && (
+                    <p>Loading</p>
+                )}
 
                 {data && (
                     <Image src={data?.url} fluid />
