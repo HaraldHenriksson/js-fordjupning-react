@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ImageSearchResponse } from '../types/RandomCatResponse'
+import { AbyssinianCat, Cat, ImageSearchResponse } from '../types/RandomCatResponse'
 
 const FAKE_DELAY = 1500
 
@@ -36,6 +36,18 @@ const get = async<T>(endpoint: string) => {
 
 export const getRandomCat = async () => {
     const data = await get<ImageSearchResponse>("images/search?limit=10")
+
+    return data[0]
+}
+
+export const getRandomAbysCat = async () => {
+    const data = await get<AbyssinianCat>("images/search?breeds_ids=abys")
+
+    return data[0]
+}
+
+export const getBreedCat = async (breedId: string) => {
+    const data = await get<Cat[]>(`images/search?breed_ids=${breedId}`);
 
     return data[0]
 }
