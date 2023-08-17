@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { Alert, Button, Image } from "react-bootstrap"
-import { getBreedCat, getRandomCat } from "../services/TheCatAPI"
+import { getBreedCat } from "../services/TheCatAPI"
 
 const breedOptions = [
-    { id: "random", label: "Random Cat" },
+    { id: "", label: "Random Cat" },
     { id: "abys", label: "Abyssinian Cat" },
     { id: "aege", label: "Aegean Cat" },
     { id: "bali", label: "Balinese" },
@@ -17,20 +17,14 @@ interface Breed {
 }
 
 const RandomCatPage = () => {
-    const [selectedBreed, setSelectedBreed] = useState("random")
+    const [selectedBreed, setSelectedBreed] = useState<string>("")
 
     const {
         data: breedData,
         error: breedError,
         isFetching: breedIsFetching,
         refetch: breedRefetch,
-    } = useQuery([`random-${selectedBreed}-cat`], () => {
-        if (selectedBreed === "random") {
-            return getRandomCat()
-        } else {
-            return getBreedCat(selectedBreed)
-        }
-    })
+    } = useQuery([`random-${selectedBreed}-cat`], () => getBreedCat(selectedBreed))
 
     if (breedError) {
         return <Alert variant="error">Oops! The dog chased away the cat</Alert>
@@ -39,7 +33,8 @@ const RandomCatPage = () => {
     const handleBreedClick = (breed: Breed) => {
         setSelectedBreed(breed.id)
         breedRefetch()
-    };
+        console.log(breed)
+    }
 
     return (
         <>
