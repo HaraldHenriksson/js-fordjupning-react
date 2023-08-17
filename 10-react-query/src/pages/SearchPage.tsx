@@ -63,7 +63,7 @@ const SearchPage: React.FC = () => {
 
 			{searchResult && (
 				<div id="search-result">
-					<p>Showing {searchResult.nbHits} search results for "{query}"...</p>
+					<p>Showing {new Intl.NumberFormat().format(searchResult.nbHits)} search results for "{query}"...</p>
 
 					<ListGroup className="mb-3">
 						{searchResult.hits.map((hit) => (
