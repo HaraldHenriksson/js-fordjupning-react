@@ -15,8 +15,6 @@ const SearchPage: React.FC = () => {
 	const query = searchParams.get('query') ?? ""
 	const [page, setPage] = useState(0)
 
-	console.log(searchInput)
-
 	const { data: searchResult, error, isLoading } = useQuery<HN_SearchResponse>(
 		['search', query, page],
 		() => searchByDate(query || '', page)
