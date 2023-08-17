@@ -48,7 +48,7 @@ const RandomCatPage = () => {
                 <div className="d-flex flex-wrap justify-content-center">
                     {breedOptions.map((breed) => (
                         <div key={breed.id} className="mb-3">
-                            <Button onClick={() => handleBreedClick(breed)} variant="primary">
+                            <Button disabled={breedIsFetching} onClick={() => handleBreedClick(breed)} variant="primary">
                                 {breed.label}
                             </Button>
                         </div>
