@@ -1,64 +1,36 @@
-import { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import { useQuery } from "@tanstack/react-query"
+import { HN_SearchResponse } from '../types/HN.types'
+import { searchByDate } from '../services//HackerNewsAPI'
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import ListGroup from 'react-bootstrap/ListGroup'
-import { useSearchParams } from 'react-router-dom'
-import { searchByDate as HN_searchByDate } from '../services/HackerNewsAPI'
-import { HN_SearchResponse } from '../types/HN.types'
 import Pagination from '../components/Pagination'
+import { useSearchParams } from 'react-router-dom'
 
-const SearchPage = () => {
-	const [error, setError] = useState<string | null>(null)
-	const [loading, setLoading] = useState(false)
-	const [page, setPage] = useState(0)
-	const [searchInput, setSearchInput] = useState("")
-	const [searchResult, setSearchResult] = useState<HN_SearchResponse | null>(null)
+const SearchPage: React.FC = () => {
+	const [searchInput, setSearchInput] = useState('')
 	const [searchParams, setSearchParams] = useSearchParams()
+	const query = searchParams.get('query')
+	const [page, setPage] = useState(0)
 
-	// get "query=" from URL Search Params
-	const query = searchParams.get("query")
+	console.log(searchInput)
 
-	const searchHackerNews = async (searchQuery: string, searchPage = 0) => {
-		setError(null)
-		setLoading(true)
-		setSearchResult(null)
-
-		try {
-			const res = await HN_searchByDate(searchQuery, searchPage)
-			setSearchResult(res)
-
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		} catch (err: any) {
-			setError(err.message)
-		}
-
-		setLoading(false)
-	}
+	const { data: searchResult, error, isLoading } = useQuery<HN_SearchResponse>(
+		['search', query, page],
+		() => searchByDate(query || '', page)
+	);
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
 
-		// haxx0r
 		if (!searchInput.trim().length) {
-			return
+			return;
 		}
 
-		// reset page state
-		setPage(0)
-
-		// set input value as query in searchParams
-		setSearchParams({ query: searchInput })    // ?query=tesla
-	}
-
-	// react to changes in our page state
-	useEffect(() => {
-		if (!query) {
-			return
-		}
-
-		searchHackerNews(query, page)
-	}, [query, page])
+		setSearchParams({ query: searchInput })
+	};
 
 	return (
 		<>
@@ -68,7 +40,7 @@ const SearchPage = () => {
 				<Form.Group className="mb-3" controlId="searchQuery">
 					<Form.Label>Search Query</Form.Label>
 					<Form.Control
-						onChange={e => setSearchInput(e.target.value)}
+						onChange={(e) => setSearchInput(e.target.value)}
 						placeholder="Enter your search query"
 						required
 						type="text"
@@ -81,25 +53,23 @@ const SearchPage = () => {
 						variant="success"
 						type="submit"
 						disabled={!searchInput.trim().length}
-					>Search</Button>
+					>
+						Search
+					</Button>
 				</div>
 			</Form>
 
-			{error && <Alert variant='warning'>{error}</Alert>}
+			{error && <Alert variant="warning">An error occurred while fetching data</Alert>}
 
-			{loading && <p>🤔 Loading...</p>}
+			{isLoading && <p>🤔 Loading...</p>}
 
 			{searchResult && (
 				<div id="search-result">
 					<p>Showing {searchResult.nbHits} search results for "{query}"...</p>
 
 					<ListGroup className="mb-3">
-						{searchResult.hits.map(hit => (
-							<ListGroup.Item
-								action
-								href={hit.url}
-								key={hit.objectID}
-							>
+						{searchResult.hits.map((hit) => (
+							<ListGroup.Item action href={hit.url} key={hit.objectID}>
 								<h2 className="h3">{hit.title}</h2>
 								<p className="text-muted small mb-0">
 									{hit.points} points by {hit.author} at {hit.created_at}
@@ -109,17 +79,17 @@ const SearchPage = () => {
 					</ListGroup>
 
 					<Pagination
-						page={searchResult.page + 1}
+						page={page}
 						totalPages={searchResult.nbPages}
 						hasPreviousPage={page > 0}
 						hasNextPage={page + 1 < searchResult.nbPages}
-						onPreviousPage={() => { setPage(prevValue => prevValue - 1) }}
-						onNextPage={() => { setPage(prevValue => prevValue + 1) }}
+						onPreviousPage={() => setPage(prevPage => prevPage - 1)}
+						onNextPage={() => setPage(prevPage => prevPage + 1)}
 					/>
 				</div>
 			)}
 		</>
-	)
-}
+	);
+};
 
-export default SearchPage
+export default SearchPage;
