@@ -12,7 +12,7 @@ import { useSearchParams } from 'react-router-dom'
 const SearchPage: React.FC = () => {
 	const [searchInput, setSearchInput] = useState('')
 	const [searchParams, setSearchParams] = useSearchParams()
-	const query = searchParams.get('query')
+	const query = searchParams.get('query') ?? ""
 	const [page, setPage] = useState(0)
 
 	console.log(searchInput)
