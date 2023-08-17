@@ -6,6 +6,7 @@ import './assets/scss/App.scss'
 import HomePage from './HomePage';
 import PageNotFound from './pages/PageNotFound';
 import RandomCatPage from './pages/RandomCatPage';
+import SearchPage from './pages/SearchPage';
 
 const App = () => {
 
@@ -18,6 +19,7 @@ const App = () => {
           <Routes>
             <Route path='/' element={<HomePage />} />
             <Route path='/random-cat' element={<RandomCatPage />} />
+            <Route path='/search' element={<SearchPage />} />
 
             <Route path='*' element={<PageNotFound />} />
           </Routes>
