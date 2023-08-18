@@ -12,7 +12,7 @@
     },
     {
       "title": "Learn stuff really fast. how can i do it",
-      "completed": false,
+      "completed": true,
       "id": 3
     },
     {
@@ -27,7 +27,7 @@
     },
     {
       "title": "new todo",
-      "completed": false,
+      "completed": true,
       "id": 7
     },
     {

@@ -8,11 +8,13 @@ import NotFound from './pages/NotFound'
 import TodoPage from './pages/TodoPage'
 import TodosPage from './pages/TodosPage'
 import './assets/scss/App.scss'
+import GlobalFetchingSpinner from './components/GlobalFetchingSpinner'
 
 const App = () => {
 	return (
 		<div id="App">
 			<Navigation />
+			<GlobalFetchingSpinner />
 
 			<Container className="py-3">
 				<Routes>
