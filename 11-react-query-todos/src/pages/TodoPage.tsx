@@ -26,20 +26,8 @@ const TodoPage = () => {
 			return
 		}
 
-		// if (!window.confirm('U SURE BRO?!')) {
-		// 	return
-		// }
-
 		// Delete todo from the api
 		await TodosAPI.deleteTodo(todo.id)
-
-		// Navigate user to `/todos` (using state)
-		// navigate('/todos', {
-		// 	replace: true,
-		// 	state: {
-		// 		message: `Todo "${todo.title}" was successfully deleted`,
-		// 	},
-		// })
 
 		// Navigate user to `/todos` (using search params/query params)
 		navigate('/todos?deleted=true', {
@@ -61,14 +49,6 @@ const TodoPage = () => {
 		// update todo state with the updated todo
 		refetch()
 	}
-
-	// useEffect(() => {
-	// 	if (typeof todoId !== "number") {
-	// 		return
-	// 	}
-
-	// 	getTodo(todoId)
-	// }, [todoId])
 
 	if (error) {
 		return (

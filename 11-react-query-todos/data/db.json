@@ -26,24 +26,9 @@
       "id": 6
     },
     {
-      "title": "new todo",
-      "completed": true,
-      "id": 7
-    },
-    {
       "title": "mega new todo",
       "completed": false,
       "id": 8
-    },
-    {
-      "title": "aa",
-      "completed": false,
-      "id": 9
-    },
-    {
-      "title": "öö",
-      "completed": true,
-      "id": 10
     }
   ]
 }
