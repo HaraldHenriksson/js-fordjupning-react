@@ -37,12 +37,12 @@
     },
     {
       "title": "aa",
-      "completed": true,
+      "completed": false,
       "id": 9
     },
     {
       "title": "öö",
-      "completed": false,
+      "completed": true,
       "id": 10
     }
   ]
