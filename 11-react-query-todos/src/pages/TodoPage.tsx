@@ -5,36 +5,45 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Todo } from '../types'
 import * as TodosAPI from '../services/TodosAPI'
 import ConfirmationModal from '../components/ConfirmationModal'
+import { useQuery } from '@tanstack/react-query'
+import { getTodo } from '../services/TodosAPI'
 
 const TodoPage = () => {
-	const [error, setError] = useState<string|null>(null)
+	const [error, setError] = useState<string | null>(null)
 	const [loading, setLoading] = useState(true)
-	const [todo, setTodo] = useState<Todo|null>(null)
+	//const [todo, setTodo] = useState<Todo|null>(null)
 	const [showConfirmDelete, setShowConfirmDelete] = useState(false)
 	const navigate = useNavigate()
 	const { id } = useParams()
 	const todoId = Number(id)
 
+	const { data: todo, refetch, isLoading } = useQuery({
+		queryKey: ['get-todos', todoId],
+		queryFn: () => TodosAPI.getTodo(todoId)
+	})
+
+	console.log(todo)
+
 	// Get todo from API
-	const getTodo = async (id: number) => {
-		setError(null)
-		setLoading(true)
+	// const getTodo = async (id: number) => {
+	// 	setError(null)
+	// 	setLoading(true)
 
-		try {
-			// call TodosAPI
-			const data = await TodosAPI.getTodo(id)
+	// 	try {
+	// 		// call TodosAPI
+	// 		const data = await TodosAPI.getTodo(id)
 
-			// update todo state with data
-			setTodo(data)
+	// 		// update todo state with data
+	// 		setTodo(data)
 
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		} catch (err: any) {
-			// set error
-			setError(err.message)
-		}
+	// 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// 	} catch (err: any) {
+	// 		// set error
+	// 		setError(err.message)
+	// 	}
 
-		setLoading(false)
-	}
+	// 	setLoading(false)
+	// }
 
 	// Delete a todo in the api
 	const deleteTodo = async (todo: Todo) => {
@@ -75,16 +84,16 @@ const TodoPage = () => {
 		})
 
 		// update todo state with the updated todo
-		setTodo(updatedTodo)
+		refetch()
 	}
 
-	useEffect(() => {
-		if (typeof todoId !== "number") {
-			return
-		}
+	// useEffect(() => {
+	// 	if (typeof todoId !== "number") {
+	// 		return
+	// 	}
 
-		getTodo(todoId)
-	}, [todoId])
+	// 	getTodo(todoId)
+	// }, [todoId])
 
 	if (error) {
 		return (
@@ -97,7 +106,7 @@ const TodoPage = () => {
 		)
 	}
 
-	if (loading || !todo) {
+	if (isLoading || !todo) {
 		return (<p>Loading...</p>)
 	}
 

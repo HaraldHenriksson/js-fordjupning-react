@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { Todo, Todos } from '../types'
 import Alert from 'react-bootstrap/Alert'
 import ListGroup from 'react-bootstrap/ListGroup'
@@ -15,31 +14,15 @@ const TodosPage = () => {
 	const searchParams_deletedTodo = searchParams.get("deleted")
 	const deletedTodo = Boolean(searchParams_deletedTodo)
 
-	const { data: todos } = useQuery({
+	const { data: todos, refetch } = useQuery({
 		queryKey: ['get-todos'],
 		queryFn: () => TodosAPI.getTodos()
 	})
 
-
-	// Get todos from api
-	// const getTodos = async () => {
-	// 	const data = await TodosAPI.getTodos()
-
-
-	// 	// sort alphabetically by title
-	// 	data.sort((a, b) => a.title.localeCompare(b.title))
-
-	// 	// sort by completed status
-	// 	data.sort((a, b) => Number(a.completed) - Number(b.completed))
-
-	// 	// update todos state
-	// 	setTodos(data)
-	// }
-
 	// Create a new todo in the API
 	const addTodo = async (todo: Todo) => {
 		await TodosAPI.createTodo(todo)
-		//getTodos()
+		refetch()
 	}
 
 	return (
