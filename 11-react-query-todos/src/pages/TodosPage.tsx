@@ -1,4 +1,4 @@
-import { Todo, Todos } from '../types'
+import { Todo } from '../types'
 import Alert from 'react-bootstrap/Alert'
 import ListGroup from 'react-bootstrap/ListGroup'
 import { Link, useLocation, useSearchParams } from 'react-router-dom'
@@ -8,7 +8,6 @@ import * as TodosAPI from '../services/TodosAPI'
 import { useQuery } from '@tanstack/react-query'
 
 const TodosPage = () => {
-	// const [todos, setTodos] = useState<Todos | null>(null)
 	const location = useLocation()
 	const [searchParams, _setSearchParams] = useSearchParams()
 	const searchParams_deletedTodo = searchParams.get("deleted")

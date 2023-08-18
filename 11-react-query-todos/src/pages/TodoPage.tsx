@@ -9,7 +9,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getTodo } from '../services/TodosAPI'
 
 const TodoPage = () => {
-	const [error, setError] = useState<string | null>(null)
+	const [error, _setError] = useState<string | null>(null)
 	const [showConfirmDelete, setShowConfirmDelete] = useState(false)
 	const navigate = useNavigate()
 	const { id } = useParams()
