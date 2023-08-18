@@ -9,13 +9,12 @@ import { useQuery } from '@tanstack/react-query'
 import { getTodo } from '../services/TodosAPI'
 
 const TodoPage = () => {
-	const [error, _setError] = useState<string | null>(null)
 	const [showConfirmDelete, setShowConfirmDelete] = useState(false)
 	const navigate = useNavigate()
 	const { id } = useParams()
 	const todoId = Number(id)
 
-	const { data: todo, refetch, isLoading } = useQuery({
+	const { data: todo, refetch, isLoading, isError } = useQuery({
 		queryKey: ['get-todos', todoId],
 		queryFn: () => TodosAPI.getTodo(todoId)
 	})
@@ -50,11 +49,11 @@ const TodoPage = () => {
 		refetch()
 	}
 
-	if (error) {
+	if (isError) {
 		return (
 			<Alert variant="warning">
 				<h1>Something went wrong!</h1>
-				<p>{error}</p>
+				<p>Something went very wrong</p>
 
 				<Button variant='primary' onClick={() => getTodo(todoId)}>TRY AGAIN!!!</Button>
 			</Alert>
