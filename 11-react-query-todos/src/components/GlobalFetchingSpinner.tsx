@@ -1,13 +1,14 @@
-import { useIsFetching } from '@tanstack/react-query';
+import { useIsFetching } from "@tanstack/react-query"
+import { PacmanLoader } from "react-spinners"
 
-const GlobalFetchingSpinner = () => {
-	const isFetching = useIsFetching();
+const GlobalLoadingSpinner = () => {
+	const isFetching = useIsFetching()
 
 	return isFetching ? (
-		<div id="cat-spinner">
-			<div className="cat">✔️</div>
+		<div id="global-loading-spinner-wrapper">
+			<PacmanLoader color="#007bff" size={20} speedMultiplier={1.5} />
 		</div>
-	) : null;
-};
+	) : null
+}
 
-export default GlobalFetchingSpinner;
+export default GlobalLoadingSpinner

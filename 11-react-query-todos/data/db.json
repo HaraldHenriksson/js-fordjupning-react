@@ -27,7 +27,7 @@
     },
     {
       "title": "mega new todo",
-      "completed": false,
+      "completed": true,
       "id": 8
     }
   ]

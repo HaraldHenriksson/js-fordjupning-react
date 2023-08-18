@@ -14,7 +14,6 @@ const App = () => {
 	return (
 		<div id="App">
 			<Navigation />
-			<GlobalFetchingSpinner />
 
 			<Container className="py-3">
 				<Routes>
@@ -37,6 +36,8 @@ const App = () => {
 					<Route path="*" element={<NotFound />} />
 				</Routes>
 			</Container>
+
+			<GlobalFetchingSpinner />
 		</div>
 	)
 }
