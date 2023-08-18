@@ -22,6 +22,7 @@ const SearchHNPage = () => {
 		() => HN_searchByDate(query, page),
 		{
 			enabled: !!query,
+			keepPreviousData: true,
 		}
 	)
 
