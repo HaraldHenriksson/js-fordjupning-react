@@ -7,6 +7,7 @@ import HomePage from './HomePage';
 import PageNotFound from './pages/PageNotFound';
 import RandomCatPage from './pages/RandomCatPage';
 import SearchPage from './pages/SearchPage';
+import GlobalFetchingSpinner from './components/GlobalFetchingSpinner';
 
 const App = () => {
 
@@ -14,6 +15,7 @@ const App = () => {
     <>
       <div id='App'>
         <Navigation />
+        <GlobalFetchingSpinner />
 
         <Container className='py-3'>
           <Routes>

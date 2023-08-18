@@ -50,9 +50,6 @@ const RandomCatPage = () => {
                     ))}
                 </div>
 
-                {breedIsFetching && <div className="spinner-border" role="status">
-                </div>}
-
                 {breedData && !breedIsFetching && (
                     <Image src={breedData?.url} fluid />
                 )}
