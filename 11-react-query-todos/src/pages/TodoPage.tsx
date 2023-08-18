@@ -54,7 +54,7 @@ const TodoPage = () => {
 		}
 
 		// Update a todo in the api
-		const updatedTodo = await TodosAPI.updateTodo(todo.id, {
+		await TodosAPI.updateTodo(todo.id, {
 			completed: !todo.completed
 		})
 
