@@ -1,34 +1,44 @@
-import React, { useState } from 'react'
-import { useQuery } from "@tanstack/react-query"
-import { HN_SearchResponse } from '../types/HN.types'
-import { searchByDate } from '../services//HackerNewsAPI'
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import ListGroup from 'react-bootstrap/ListGroup'
-import Pagination from '../components/Pagination'
 import { useSearchParams } from 'react-router-dom'
+import { searchByDate as HN_searchByDate } from '../services/HackerNewsAPI'
+import HN_ListItem from '../components/HN_ListItem'
+import Pagination from '../components/Pagination'
 
-const SearchPage: React.FC = () => {
-	const [searchInput, setSearchInput] = useState('')
-	const [searchParams, setSearchParams] = useSearchParams()
-	const query = searchParams.get('query') ?? ""
+const SearchHNPage = () => {
 	const [page, setPage] = useState(0)
+	const [searchInput, setSearchInput] = useState("")
+	const [searchParams, setSearchParams] = useSearchParams()
 
-	const { data: searchResult, error, isLoading } = useQuery<HN_SearchResponse>(
-		['search', query, page],
-		() => searchByDate(query || '', page)
-	);
+	// get "query=" from URL Search Params
+	const query = searchParams.get("query") ?? ""
+
+	const { data: searchResult, isError } = useQuery(
+		['search-hn', { query, page }],
+		() => HN_searchByDate(query, page),
+		{
+			enabled: !!query,
+		}
+	)
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
 
+		// haxx0r
 		if (!searchInput.trim().length) {
-			return;
+			return
 		}
 
-		setSearchParams({ query: searchInput })
-	};
+		// reset page state
+		setPage(0)
+
+		// set input value as query in searchParams
+		setSearchParams({ query: searchInput })    // ?query=tesla
+	}
 
 	return (
 		<>
@@ -38,7 +48,7 @@ const SearchPage: React.FC = () => {
 				<Form.Group className="mb-3" controlId="searchQuery">
 					<Form.Label>Search Query</Form.Label>
 					<Form.Control
-						onChange={(e) => setSearchInput(e.target.value)}
+						onChange={e => setSearchInput(e.target.value)}
 						placeholder="Enter your search query"
 						required
 						type="text"
@@ -51,43 +61,37 @@ const SearchPage: React.FC = () => {
 						variant="success"
 						type="submit"
 						disabled={!searchInput.trim().length}
-					>
-						Search
-					</Button>
+					>Search</Button>
 				</div>
 			</Form>
 
-			{error && <Alert variant="warning">An error occurred while fetching data</Alert>}
-
-			{isLoading && <p>🤔 Loading...</p>}
+			{isError && <Alert variant='warning'>Ooops, something went wrong!</Alert>}
 
 			{searchResult && (
 				<div id="search-result">
 					<p>Showing {new Intl.NumberFormat().format(searchResult.nbHits)} search results for "{query}"...</p>
 
 					<ListGroup className="mb-3">
-						{searchResult.hits.map((hit) => (
-							<ListGroup.Item action href={hit.url} key={hit.objectID}>
-								<h2 className="h3">{hit.title}</h2>
-								<p className="text-muted small mb-0">
-									{hit.points} points by {hit.author} at {hit.created_at}
-								</p>
-							</ListGroup.Item>
+						{searchResult.hits.map(hit => (
+							<HN_ListItem
+								key={hit.objectID}
+								item={hit}
+							/>
 						))}
 					</ListGroup>
 
 					<Pagination
-						page={page}
+						page={searchResult.page + 1}
 						totalPages={searchResult.nbPages}
 						hasPreviousPage={page > 0}
 						hasNextPage={page + 1 < searchResult.nbPages}
-						onPreviousPage={() => setPage(prevPage => prevPage - 1)}
-						onNextPage={() => setPage(prevPage => prevPage + 1)}
+						onPreviousPage={() => { setPage(prevValue => prevValue - 1) }}
+						onNextPage={() => { setPage(prevValue => prevValue + 1) }}
 					/>
 				</div>
 			)}
 		</>
-	);
-};
+	)
+}
 
-export default SearchPage;
+export default SearchHNPage
