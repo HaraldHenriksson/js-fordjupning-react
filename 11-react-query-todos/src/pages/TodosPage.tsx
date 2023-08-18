@@ -6,38 +6,41 @@ import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import AddNewTodoForm from '../components/AddNewTodoForm'
 import AutoDismissingAlert from '../components/AutoDismissingAlert'
 import * as TodosAPI from '../services/TodosAPI'
+import { useQuery } from '@tanstack/react-query'
 
 const TodosPage = () => {
-	const [todos, setTodos] = useState<Todos | null>(null)
+	// const [todos, setTodos] = useState<Todos | null>(null)
 	const location = useLocation()
 	const [searchParams, _setSearchParams] = useSearchParams()
 	const searchParams_deletedTodo = searchParams.get("deleted")
 	const deletedTodo = Boolean(searchParams_deletedTodo)
 
+	const { data: todos } = useQuery({
+		queryKey: ['get-todos'],
+		queryFn: () => TodosAPI.getTodos()
+	})
+
+
 	// Get todos from api
-	const getTodos = async () => {
-		const data = await TodosAPI.getTodos()
+	// const getTodos = async () => {
+	// 	const data = await TodosAPI.getTodos()
 
-		// sort alphabetically by title
-		data.sort((a, b) => a.title.localeCompare(b.title))
 
-		// sort by completed status
-		data.sort((a, b) => Number(a.completed) - Number(b.completed))
+	// 	// sort alphabetically by title
+	// 	data.sort((a, b) => a.title.localeCompare(b.title))
 
-		// update todos state
-		setTodos(data)
-	}
+	// 	// sort by completed status
+	// 	data.sort((a, b) => Number(a.completed) - Number(b.completed))
+
+	// 	// update todos state
+	// 	setTodos(data)
+	// }
 
 	// Create a new todo in the API
 	const addTodo = async (todo: Todo) => {
 		await TodosAPI.createTodo(todo)
-		getTodos()
+		//getTodos()
 	}
-
-	// fetch todos when App is being mounted
-	useEffect(() => {
-		getTodos()
-	}, [])
 
 	return (
 		<>
