@@ -12,7 +12,7 @@
     },
     {
       "title": "Learn stuff",
-      "completed": true,
+      "completed": false,
       "id": 3
     },
     {
@@ -34,6 +34,16 @@
       "title": "mega new todo",
       "completed": false,
       "id": 8
+    },
+    {
+      "title": "aa",
+      "completed": false,
+      "id": 9
+    },
+    {
+      "title": "öö",
+      "completed": false,
+      "id": 10
     }
   ]
 }

@@ -25,6 +25,17 @@ const TodosPage = () => {
 		refetch()
 	}
 
+	if (todos) {
+
+		todos?.sort((a, b) => a.title.localeCompare(b.title))
+
+		// sort by completed status
+		todos?.sort((a, b) => Number(a.completed) - Number(b.completed))
+
+	}
+
+
+
 	return (
 		<>
 			<h1 className="mb-3">Todos</h1>

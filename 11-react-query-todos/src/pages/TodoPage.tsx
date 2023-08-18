@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -10,8 +10,6 @@ import { getTodo } from '../services/TodosAPI'
 
 const TodoPage = () => {
 	const [error, setError] = useState<string | null>(null)
-	const [loading, setLoading] = useState(true)
-	//const [todo, setTodo] = useState<Todo|null>(null)
 	const [showConfirmDelete, setShowConfirmDelete] = useState(false)
 	const navigate = useNavigate()
 	const { id } = useParams()
@@ -21,29 +19,6 @@ const TodoPage = () => {
 		queryKey: ['get-todos', todoId],
 		queryFn: () => TodosAPI.getTodo(todoId)
 	})
-
-	console.log(todo)
-
-	// Get todo from API
-	// const getTodo = async (id: number) => {
-	// 	setError(null)
-	// 	setLoading(true)
-
-	// 	try {
-	// 		// call TodosAPI
-	// 		const data = await TodosAPI.getTodo(id)
-
-	// 		// update todo state with data
-	// 		setTodo(data)
-
-	// 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	// 	} catch (err: any) {
-	// 		// set error
-	// 		setError(err.message)
-	// 	}
-
-	// 	setLoading(false)
-	// }
 
 	// Delete a todo in the api
 	const deleteTodo = async (todo: Todo) => {
