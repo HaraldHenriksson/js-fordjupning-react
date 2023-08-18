@@ -8,9 +8,9 @@ import AutoDismissingAlert from '../components/AutoDismissingAlert'
 import * as TodosAPI from '../services/TodosAPI'
 
 const TodosPage = () => {
-	const [todos, setTodos] = useState<Todos|null>(null)
+	const [todos, setTodos] = useState<Todos | null>(null)
 	const location = useLocation()
-	const [searchParams, setSearchParams] = useSearchParams()
+	const [searchParams, _setSearchParams] = useSearchParams()
 	const searchParams_deletedTodo = searchParams.get("deleted")
 	const deletedTodo = Boolean(searchParams_deletedTodo)
 
