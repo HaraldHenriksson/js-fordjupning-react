@@ -29,6 +29,11 @@
       "title": "mega new todo",
       "completed": true,
       "id": 8
+    },
+    {
+      "title": "adding a todo with mutation",
+      "completed": false,
+      "id": 9
     }
   ]
 }

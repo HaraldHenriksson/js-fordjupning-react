@@ -6,8 +6,13 @@ import AddNewTodoForm from '../components/AddNewTodoForm'
 import AutoDismissingAlert from '../components/AutoDismissingAlert'
 import * as TodosAPI from '../services/TodosAPI'
 import { useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
+
 
 const TodosPage = () => {
+
+	const createTodoMutation = useMutation(TodosAPI.createTodo)
+
 	const location = useLocation()
 	const [searchParams, _setSearchParams] = useSearchParams()
 	const searchParams_deletedTodo = searchParams.get("deleted")
@@ -20,7 +25,7 @@ const TodosPage = () => {
 
 	// Create a new todo in the API
 	const addTodo = async (todo: Todo) => {
-		await TodosAPI.createTodo(todo)
+		await createTodoMutation.mutateAsync(todo)
 		refetch()
 	}
 
