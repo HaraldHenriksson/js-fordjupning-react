@@ -22,7 +22,7 @@ const CreateTodoPage = () => {
 				navigate("/todos")
 			}, 2000)
 
-			setSuccess(!!createTodoMutation)
+			setSuccess(createTodoMutation.isSuccess)
 
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (err: any) {
