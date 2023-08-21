@@ -4,21 +4,25 @@ import Alert from 'react-bootstrap/Alert'
 import { Todo } from '../types/TodosAPI.types'
 import AddNewTodoForm from '../components/AddNewTodoForm'
 import * as TodosAPI from '../services/TodosAPI'
+import { useMutation } from '@tanstack/react-query'
 
 const CreateTodoPage = () => {
+
+	const createTodoMutation = useMutation(TodosAPI.createTodo)
+
 	const [success, setSuccess] = useState<boolean | null>(null)
 	const navigate = useNavigate()
 
 	// Create a new todo in the API
 	const addTodo = async (todo: Todo) => {
 		try {
-			const createdTodo = await TodosAPI.createTodo(todo)
+			await createTodoMutation.mutateAsync(todo)
 
 			setTimeout(() => {
 				navigate("/todos")
 			}, 2000)
 
-			setSuccess(!!createdTodo)
+			setSuccess(!!createTodoMutation)
 
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (err: any) {
