@@ -7,23 +7,24 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 const CreateTodoPage = () => {
 
+	const queryClient = useQueryClient()
+
 	const createTodoMutation = useMutation({
 		mutationFn: TodosAPI.createTodo,
 		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['todos'] })
 			setTimeout(() => {
 				navigate("/todos")
 			}, 2000)
 		}
 	})
 
-	const queryClient = useQueryClient()
 
 	const navigate = useNavigate()
 
 	// Create a new todo in the API
 	const addTodo = async (todo: NewTodo) => {
 		await createTodoMutation.mutateAsync(todo)
-		queryClient.invalidateQueries()
 	}
 
 	return (

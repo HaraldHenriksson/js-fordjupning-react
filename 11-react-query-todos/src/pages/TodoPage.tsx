@@ -6,6 +6,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Todo } from '../types/TodosAPI.types'
 import * as TodosAPI from '../services/TodosAPI'
 import ConfirmationModal from '../components/ConfirmationModal'
+import { getTodos } from '../services/TodosAPI'
 
 const TodoPage = () => {
 	const [showConfirmDelete, setShowConfirmDelete] = useState(false)
@@ -25,6 +26,8 @@ const TodoPage = () => {
 	const deleteTodoMutation = useMutation({
 		mutationFn: () => TodosAPI.deleteTodo(todoId),
 		onSuccess: () => {
+			queryClient.invalidateQueries(['todo', { id: todoId }])
+			//getTodos()
 			// Navigate user to `/todos` (using search params/query params)
 			navigate('/todos?deleted=true', {
 				replace: true,

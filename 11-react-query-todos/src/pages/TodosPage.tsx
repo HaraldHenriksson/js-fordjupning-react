@@ -5,28 +5,35 @@ import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import AddNewTodoForm from '../components/AddNewTodoForm'
 import AutoDismissingAlert from '../components/AutoDismissingAlert'
 import * as TodosAPI from '../services/TodosAPI'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useMutation } from '@tanstack/react-query'
 
 
 const TodosPage = () => {
 
-	const createTodoMutation = useMutation(TodosAPI.createTodo)
+
 
 	const location = useLocation()
 	const [searchParams, _setSearchParams] = useSearchParams()
 	const searchParams_deletedTodo = searchParams.get("deleted")
 	const deletedTodo = Boolean(searchParams_deletedTodo)
+	const queryClient = useQueryClient()
 
 	const { data: todos, refetch: getTodos } = useQuery({
 		queryKey: ['get-todos'],
 		queryFn: () => TodosAPI.getTodos()
 	})
 
+	const createTodoMutation = useMutation({
+		mutationFn: TodosAPI.createTodo,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['todos'] })
+		}
+	})
+
 	// Create a new todo in the API
 	const addTodo = async (todo: NewTodo) => {
 		await createTodoMutation.mutateAsync(todo)
-		getTodos()
 	}
 
 	if (todos) {
