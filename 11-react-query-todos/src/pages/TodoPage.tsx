@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
@@ -20,6 +20,8 @@ const TodoPage = () => {
 		refetch: getTodo,
 	} = useQuery(["todo", { id: todoId }], () => TodosAPI.getTodo(todoId))
 
+	const queryClient = useQueryClient()
+
 	const deleteTodoMutation = useMutation({
 		mutationFn: () => TodosAPI.deleteTodo(todoId),
 		onSuccess: () => {
@@ -36,9 +38,12 @@ const TodoPage = () => {
 		}),
 	})
 
+
 	// Toggle the completed status of a todo in the api
 	const toggleTodo = async (todo: Todo) => {
 		updateTodoCompletedMutation.mutate(!todo.completed)
+		queryClient.invalidateQueries(['todo', { id: todoId }])
+		getTodo()
 	}
 
 	if (isError) {

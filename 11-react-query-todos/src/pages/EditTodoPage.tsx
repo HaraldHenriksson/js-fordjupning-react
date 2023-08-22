@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useNavigate, useParams } from 'react-router-dom'
 import * as TodosAPI from '../services/TodosAPI'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { PartialTodo } from '../types/TodosAPI.types'
 
 const EditTodoPage = () => {
@@ -23,6 +23,8 @@ const EditTodoPage = () => {
 		TodosAPI.getTodo(todoId)
 	)
 
+	const queryClient = useQueryClient()
+
 	const updateTodoMutation = useMutation(
 		(data: PartialTodo) => TodosAPI.updateTodo(todoId, data),
 		{
@@ -33,6 +35,7 @@ const EditTodoPage = () => {
 				setError('Todo could not be updated 😔')
 			},
 		}
+
 	)
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -55,6 +58,8 @@ const EditTodoPage = () => {
 
 		// redirect user to /todos/:id
 		navigate(`/todos/${todo.id}`)
+
+		queryClient.invalidateQueries(['todo', { id: todoId }])
 	}
 
 	if (isError) {
