@@ -18,7 +18,7 @@ const TodosPage = () => {
 	const searchParams_deletedTodo = searchParams.get("deleted")
 	const deletedTodo = Boolean(searchParams_deletedTodo)
 
-	const { data: todos, refetch } = useQuery({
+	const { data: todos, refetch: getTodos } = useQuery({
 		queryKey: ['get-todos'],
 		queryFn: () => TodosAPI.getTodos()
 	})
@@ -26,7 +26,7 @@ const TodosPage = () => {
 	// Create a new todo in the API
 	const addTodo = async (todo: NewTodo) => {
 		await createTodoMutation.mutateAsync(todo)
-		refetch()
+		getTodos()
 	}
 
 	if (todos) {
