@@ -3,7 +3,7 @@ import Alert from 'react-bootstrap/Alert'
 import { NewTodo } from '../types/TodosAPI.types'
 import AddNewTodoForm from '../components/AddNewTodoForm'
 import * as TodosAPI from '../services/TodosAPI'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 const CreateTodoPage = () => {
 
@@ -16,11 +16,14 @@ const CreateTodoPage = () => {
 		}
 	})
 
+	const queryClient = useQueryClient()
+
 	const navigate = useNavigate()
 
 	// Create a new todo in the API
 	const addTodo = async (todo: NewTodo) => {
 		await createTodoMutation.mutateAsync(todo)
+		queryClient.invalidateQueries()
 	}
 
 	return (
