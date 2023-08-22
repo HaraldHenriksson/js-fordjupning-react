@@ -1,41 +1,39 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Todo } from '../types/TodosAPI.types'
 import * as TodosAPI from '../services/TodosAPI'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { PartialTodo } from '../types/TodosAPI.types'
 
 const EditTodoPage = () => {
 	const [error, setError] = useState<string | null>(null)
-	const [loading, setLoading] = useState(true)
-	const [todo, setTodo] = useState<Todo | null>(null)
 	const [newTodoTitle, setNewTodoTitle] = useState("")
 	const navigate = useNavigate()
 	const { id } = useParams()
 	const todoId = Number(id)
 
-	// Get todo from API
-	const getTodo = async (id: number) => {
-		setError(null)
-		setLoading(true)
+	const {
+		data: todo,
+		isError,
+		isLoading,
+		refetch: getTodo
+	} = useQuery(['todo', { id: todoId }], () =>
+		TodosAPI.getTodo(todoId)
+	)
 
-		try {
-			// call TodosAPI
-			const data = await TodosAPI.getTodo(id)
-
-			// update todo state with data
-			setTodo(data)
-			setNewTodoTitle(data.title)
-
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		} catch (err: any) {
-			// set error
-			setError(err.message)
+	const updateTodoMutation = useMutation(
+		(data: PartialTodo) => TodosAPI.updateTodo(todoId, data),
+		{
+			onSuccess: () => {
+				navigate(`/todos/${todoId}`)
+			},
+			onError: () => {
+				setError('Todo could not be updated 😔')
+			},
 		}
-
-		setLoading(false)
-	}
+	)
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
@@ -44,35 +42,33 @@ const EditTodoPage = () => {
 			return
 		}
 
+		const updatedTodo = {
+			title: newTodoTitle,
+		}
+
 		// Update a todo in the api
 		await TodosAPI.updateTodo(todo.id, {
 			title: newTodoTitle,
 		})
 
+		updateTodoMutation.mutate(updatedTodo)
+
 		// redirect user to /todos/:id
 		navigate(`/todos/${todo.id}`)
 	}
 
-	useEffect(() => {
-		if (typeof todoId !== "number") {
-			return
-		}
-
-		getTodo(todoId)
-	}, [todoId])
-
-	if (error) {
+	if (isError) {
 		return (
 			<Alert variant="warning">
 				<h1>Something went wrong!</h1>
 				<p>{error}</p>
 
-				<Button variant='primary' onClick={() => getTodo(todoId)}>TRY AGAIN!!!</Button>
+				<Button variant='primary' onClick={() => getTodo()}>TRY AGAIN!!!</Button>
 			</Alert>
 		)
 	}
 
-	if (loading || !todo) {
+	if (isLoading || !todo) {
 		return (<p>Loading...</p>)
 	}
 
