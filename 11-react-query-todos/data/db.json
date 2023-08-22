@@ -1,16 +1,6 @@
 {
   "todos": [
     {
-      "title": "Learn React Bootstrap",
-      "completed": true,
-      "id": 1
-    },
-    {
-      "title": "Learn React Router",
-      "completed": false,
-      "id": 2
-    },
-    {
       "title": "Learn stuff really fast. how can i do it",
       "completed": true,
       "id": 3
@@ -36,7 +26,7 @@
       "id": 9
     },
     {
-      "title": "mutationTodo from create page",
+      "title": "edited todo",
       "completed": false,
       "id": 10
     }

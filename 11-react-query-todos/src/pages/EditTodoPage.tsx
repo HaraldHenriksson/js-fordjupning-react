@@ -51,7 +51,7 @@ const EditTodoPage = () => {
 			title: newTodoTitle,
 		})
 
-		updateTodoMutation.mutate(updatedTodo)
+		updateTodoMutation.mutateAsync(updatedTodo)
 
 		// redirect user to /todos/:id
 		navigate(`/todos/${todo.id}`)
