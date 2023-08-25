@@ -9,11 +9,6 @@
       "title": "Learn about query invalidation",
       "completed": false,
       "id": 13
-    },
-    {
-      "title": "Learn even more about query invalidations and prefetching",
-      "completed": false,
-      "id": 15
     }
   ]
 }
