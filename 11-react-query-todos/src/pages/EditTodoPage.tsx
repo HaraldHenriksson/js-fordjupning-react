@@ -1,44 +1,28 @@
 import { useEffect, useState } from 'react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useNavigate, useParams } from 'react-router-dom'
-import * as TodosAPI from '../services/TodosAPI'
+import useTodo from '../hooks/useTodo'
+import useUpdateTodo from '../hooks/useUpdateTodo'
 
 const EditTodoPage = () => {
 	const [newTodoTitle, setNewTodoTitle] = useState("")
 	const navigate = useNavigate()
 	const { id } = useParams()
 	const todoId = Number(id)
-	const queryClient = useQueryClient()
+
 
 	const {
 		data: todo,
 		isError,
 		isLoading,
 		refetch: getTodo,
-	} = useQuery(["todo", { id: todoId }], () => TodosAPI.getTodo(todoId))
+		//} = useQuery(["todo", { id: todoId }], () => TodosAPI.getTodo(todoId))
+	} = useTodo(todoId)
 
-	const updateTodoTitleMutation = useMutation({
-		mutationFn: (newTodoTitle: string) => TodosAPI.updateTodo(todoId, {
-			title: newTodoTitle,
-		}),
-		onSuccess: async (updatedTodo) => {
-			// set the response from the mutation as the query cache for the specific single todo
-			queryClient.setQueryData(["todo", { id: todoId }], updatedTodo)
-
-			// trigger refetching of all todos
-			// queryClient.invalidateQueries({ queryKey: ["todos"] })
-			// queryClient.prefetchQuery({
-			// 	queryKey: ["todos"],
-			// 	queryFn: TodosAPI.getTodos,
-			// })
-			queryClient.refetchQueries({ queryKey: ["todos"] })
-
-			// redirect user to /todos/:id
-			navigate(`/todos/${todoId}`)
-		},
+	const updateTodoTitleMutation = useUpdateTodo(todoId, () => {
+		navigate(`/todos/${todoId}`)
 	})
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -49,7 +33,7 @@ const EditTodoPage = () => {
 		}
 
 		// Update a todo in the api
-		updateTodoTitleMutation.mutate(newTodoTitle)
+		updateTodoTitleMutation.mutate({ title: newTodoTitle })
 	}
 
 	useEffect(() => {
