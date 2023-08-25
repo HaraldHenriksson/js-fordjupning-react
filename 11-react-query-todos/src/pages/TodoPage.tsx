@@ -1,53 +1,70 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { Todo } from '../types/TodosAPI.types'
+import { Todo, Todos } from '../types/TodosAPI.types'
 import * as TodosAPI from '../services/TodosAPI'
 import ConfirmationModal from '../components/ConfirmationModal'
 
 const TodoPage = () => {
+	const [queryEnabled, setQueryEnabled] = useState(true)
 	const [showConfirmDelete, setShowConfirmDelete] = useState(false)
 	const navigate = useNavigate()
 	const { id } = useParams()
 	const todoId = Number(id)
+	const queryClient = useQueryClient()
 
 	const {
 		data: todo,
 		isError,
 		isLoading,
 		refetch: getTodo,
-	} = useQuery(["todo", { id: todoId }], () => TodosAPI.getTodo(todoId))
+	} = useQuery(["todo", { id: todoId }], () => TodosAPI.getTodo(todoId), { enabled: queryEnabled })
 
-	// Delete a todo in the api
-	const deleteTodo = async (todo: Todo) => {
-		if (!todo.id) {
-			return
+	const deleteTodoMutation = useMutation({
+		mutationFn: () => TodosAPI.deleteTodo(todoId),
+		onSuccess: () => {
+			// disable query for this specific single todo
+			setQueryEnabled(false)
+
+			// remove the query for this specific single todo
+			queryClient.removeQueries({ queryKey: ["todo", { id: todoId }] })
+
+			// invalidate the query for all todos
+			// queryClient.invalidateQueries({ queryKey: ["todos"] })
+			// modify query cache for ["todos"] and construct a new array with
+			// the deleted todo excluded
+			queryClient.setQueryData<Todos>(["todos"], (prevTodos) => {
+				return prevTodos?.filter(todo => todo.id !== todoId) ?? []
+			})
+
+			// Navigate user to `/todos` (with delete-status as state)
+			navigate('/todos', {
+				replace: true,
+				state: {
+					deleted: true,
+				}
+			})
 		}
+	})
 
-		// Delete todo from the api
-		await TodosAPI.deleteTodo(todo.id)
+	const updateTodoCompletedMutation = useMutation({
+		mutationFn: (newCompleted: boolean) => TodosAPI.updateTodo(todoId, {
+			completed: newCompleted,
+		}),
+		onSuccess: () => {
+			// invalidate the query for this specific single todo
+			queryClient.invalidateQueries({ queryKey: ["todo", { id: todoId }] })
 
-		// Navigate user to `/todos` (using search params/query params)
-		navigate('/todos?deleted=true', {
-			replace: true,
-		})
-	}
+			// invalidate the query for all todos
+			queryClient.invalidateQueries({ queryKey: ["todos"] })
+		},
+	})
 
 	// Toggle the completed status of a todo in the api
 	const toggleTodo = async (todo: Todo) => {
-		if (!todo.id) {
-			return
-		}
-
-		// Update a todo in the api
-		const updatedTodo = await TodosAPI.updateTodo(todo.id, {
-			completed: !todo.completed
-		})
-
-		// update todo state with the updated todo
-		getTodo()
+		updateTodoCompletedMutation.mutate(!todo.completed)
 	}
 
 	if (isError) {
@@ -72,19 +89,23 @@ const TodoPage = () => {
 			<p><strong>Status:</strong> {todo.completed ? 'Completed' : 'Not completed'}</p>
 
 			<div className="buttons mb-3">
-				<Button variant='success' onClick={() => toggleTodo(todo)}>Toggle</Button>
+				<Button
+					variant='success'
+					onClick={() => toggleTodo(todo)}
+					disabled={updateTodoCompletedMutation.isLoading}
+				>Toggle</Button>
 
 				<Link to={`/todos/${todoId}/edit`}>
 					<Button variant='warning'>Edit</Button>
 				</Link>
 
-				<Button variant='danger' onClick={() => setShowConfirmDelete(true)}>Delete</Button>
+				<Button variant='danger' onClick={() => setShowConfirmDelete(true)} disabled={deleteTodoMutation.isLoading}>Delete</Button>
 			</div>
 
 			<ConfirmationModal
 				show={showConfirmDelete}
 				onCancel={() => setShowConfirmDelete(false)}
-				onConfirm={() => deleteTodo(todo)}
+				onConfirm={() => !deleteTodoMutation.isLoading && deleteTodoMutation.mutate()}
 			>
 				U SURE BRO?!
 			</ConfirmationModal>

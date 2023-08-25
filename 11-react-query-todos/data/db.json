@@ -1,29 +1,19 @@
 {
   "todos": [
     {
-      "title": "Learn React Bootstrap",
+      "title": "Learn about the benefits of mutations",
       "completed": false,
-      "id": 1
+      "id": 12
     },
     {
-      "title": "Learn React Router",
+      "title": "Learn about query invalidation",
       "completed": false,
-      "id": 2
+      "id": 13
     },
     {
-      "title": "Learn stuff",
-      "completed": true,
-      "id": 3
-    },
-    {
-      "title": "Look mommy, a todo 🤩!",
-      "completed": true,
-      "id": 4
-    },
-    {
-      "title": "I <3 TypeScript",
+      "title": "Learn even more about query invalidations and prefetching",
       "completed": false,
-      "id": 6
+      "id": 15
     }
   ]
 }

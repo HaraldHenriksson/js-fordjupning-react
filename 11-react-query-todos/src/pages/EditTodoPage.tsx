@@ -1,41 +1,45 @@
 import { useEffect, useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Todo } from '../types/TodosAPI.types'
 import * as TodosAPI from '../services/TodosAPI'
 
 const EditTodoPage = () => {
-	const [error, setError] = useState<string|null>(null)
-	const [loading, setLoading] = useState(true)
-	const [todo, setTodo] = useState<Todo|null>(null)
 	const [newTodoTitle, setNewTodoTitle] = useState("")
 	const navigate = useNavigate()
 	const { id } = useParams()
 	const todoId = Number(id)
+	const queryClient = useQueryClient()
 
-	// Get todo from API
-	const getTodo = async (id: number) => {
-		setError(null)
-		setLoading(true)
+	const {
+		data: todo,
+		isError,
+		isLoading,
+		refetch: getTodo,
+	} = useQuery(["todo", { id: todoId }], () => TodosAPI.getTodo(todoId))
 
-		try {
-			// call TodosAPI
-			const data = await TodosAPI.getTodo(id)
+	const updateTodoTitleMutation = useMutation({
+		mutationFn: (newTodoTitle: string) => TodosAPI.updateTodo(todoId, {
+			title: newTodoTitle,
+		}),
+		onSuccess: async (updatedTodo) => {
+			// set the response from the mutation as the query cache for the specific single todo
+			queryClient.setQueryData(["todo", { id: todoId }], updatedTodo)
 
-			// update todo state with data
-			setTodo(data)
-			setNewTodoTitle(data.title)
+			// trigger refetching of all todos
+			// queryClient.invalidateQueries({ queryKey: ["todos"] })
+			// queryClient.prefetchQuery({
+			// 	queryKey: ["todos"],
+			// 	queryFn: TodosAPI.getTodos,
+			// })
+			queryClient.refetchQueries({ queryKey: ["todos"] })
 
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		} catch (err: any) {
-			// set error
-			setError(err.message)
-		}
-
-		setLoading(false)
-	}
+			// redirect user to /todos/:id
+			navigate(`/todos/${todoId}`)
+		},
+	})
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
@@ -45,34 +49,27 @@ const EditTodoPage = () => {
 		}
 
 		// Update a todo in the api
-		await TodosAPI.updateTodo(todo.id, {
-			title: newTodoTitle,
-		})
-
-		// redirect user to /todos/:id
-		navigate(`/todos/${todo.id}`)
+		updateTodoTitleMutation.mutate(newTodoTitle)
 	}
 
 	useEffect(() => {
-		if (typeof todoId !== "number") {
-			return
+		if (todo) {
+			setNewTodoTitle(todo.title)
 		}
+	}, [todo])
 
-		getTodo(todoId)
-	}, [todoId])
-
-	if (error) {
+	if (isError) {
 		return (
 			<Alert variant="warning">
 				<h1>Something went wrong!</h1>
-				<p>{error}</p>
+				<p>It wasn't me that did something /the server</p>
 
-				<Button variant='primary' onClick={() => getTodo(todoId)}>TRY AGAIN!!!</Button>
+				<Button variant='primary' onClick={() => getTodo()}>TRY AGAIN!!!</Button>
 			</Alert>
 		)
 	}
 
-	if (loading || !todo) {
+	if (isLoading || !todo) {
 		return (<p>Loading...</p>)
 	}
 
@@ -91,7 +88,7 @@ const EditTodoPage = () => {
 					/>
 				</Form.Group>
 
-				<Button variant="primary" type="submit">
+				<Button variant="primary" type="submit" disabled={updateTodoTitleMutation.isLoading}>
 					Save
 				</Button>
 			</Form>
