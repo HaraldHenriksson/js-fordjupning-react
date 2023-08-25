@@ -1,6 +1,7 @@
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import Container from 'react-bootstrap/Container'
 import { Routes, Route } from 'react-router-dom'
+import { ToastContainer } from 'react-bootstrap'
 import GlobalLoadingSpinner from './components/GlobalLoadingSpinner'
 import Navigation from './components/Navigation'
 import CreateTodoPage from './pages/CreateTodoPage'
@@ -16,6 +17,7 @@ const App = () => {
 		<div id="App">
 			<Navigation />
 			<GlobalLoadingSpinner />
+			<ToastContainer />
 
 			<Container className="py-3">
 				<Routes>
