@@ -1,7 +1,17 @@
 {
   "todos": [
     {
-      "title": "Learn stuff really fast. how can i do it",
+      "title": "Learn React Bootstrap",
+      "completed": false,
+      "id": 1
+    },
+    {
+      "title": "Learn React Router",
+      "completed": false,
+      "id": 2
+    },
+    {
+      "title": "Learn stuff",
       "completed": true,
       "id": 3
     },
@@ -12,63 +22,8 @@
     },
     {
       "title": "I <3 TypeScript",
-      "completed": true,
+      "completed": false,
       "id": 6
-    },
-    {
-      "title": "mega new todo",
-      "completed": true,
-      "id": 8
-    },
-    {
-      "title": "adding a todo with mutation",
-      "completed": false,
-      "id": 9
-    },
-    {
-      "title": "adf",
-      "completed": true,
-      "id": 10
-    },
-    {
-      "title": "asdfg",
-      "completed": false,
-      "id": 11
-    },
-    {
-      "title": "query",
-      "completed": false,
-      "id": 12
-    },
-    {
-      "title": "even more",
-      "completed": false,
-      "id": 13
-    },
-    {
-      "title": "more more",
-      "completed": false,
-      "id": 14
-    },
-    {
-      "title": "1234",
-      "completed": false,
-      "id": 15
-    },
-    {
-      "title": "5679",
-      "completed": false,
-      "id": 16
-    },
-    {
-      "title": "hahaha",
-      "completed": false,
-      "id": 17
-    },
-    {
-      "title": "lolol",
-      "completed": false,
-      "id": 18
     }
   ]
 }

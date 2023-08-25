@@ -1,5 +1,7 @@
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import Container from 'react-bootstrap/Container'
 import { Routes, Route } from 'react-router-dom'
+import GlobalLoadingSpinner from './components/GlobalLoadingSpinner'
 import Navigation from './components/Navigation'
 import CreateTodoPage from './pages/CreateTodoPage'
 import EditTodoPage from './pages/EditTodoPage'
@@ -8,12 +10,12 @@ import NotFound from './pages/NotFound'
 import TodoPage from './pages/TodoPage'
 import TodosPage from './pages/TodosPage'
 import './assets/scss/App.scss'
-import GlobalFetchingSpinner from './components/GlobalFetchingSpinner'
 
 const App = () => {
 	return (
 		<div id="App">
 			<Navigation />
+			<GlobalLoadingSpinner />
 
 			<Container className="py-3">
 				<Routes>
@@ -37,7 +39,7 @@ const App = () => {
 				</Routes>
 			</Container>
 
-			<GlobalFetchingSpinner />
+			<ReactQueryDevtools initialIsOpen={false} position='bottom-right' />
 		</div>
 	)
 }

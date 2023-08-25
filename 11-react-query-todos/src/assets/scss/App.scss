@@ -1,19 +1,19 @@
 @import "bootstrap/scss/bootstrap";
-@import "_cat_spinner";
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin-bottom: 0.75em;
+h1, h2, h3, h4, h5, h6 {
+	margin-bottom: 0.75em;
+}
+
+#global-loading-spinner-wrapper {
+	position: absolute;
+	top: 4.5rem;
+	right: 3.5rem;
 }
 
 .todolist {
-  .done {
-    color: $success;
-    font-style: italic;
-    text-decoration: line-through;
-  }
+	.done {
+		color: $success;
+		font-style: italic;
+		text-decoration: line-through;
+	}
 }

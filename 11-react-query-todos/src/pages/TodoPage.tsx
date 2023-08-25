@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
@@ -6,7 +6,6 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Todo } from '../types/TodosAPI.types'
 import * as TodosAPI from '../services/TodosAPI'
 import ConfirmationModal from '../components/ConfirmationModal'
-import { getTodos } from '../services/TodosAPI'
 
 const TodoPage = () => {
 	const [showConfirmDelete, setShowConfirmDelete] = useState(false)
@@ -21,33 +20,34 @@ const TodoPage = () => {
 		refetch: getTodo,
 	} = useQuery(["todo", { id: todoId }], () => TodosAPI.getTodo(todoId))
 
-	const queryClient = useQueryClient()
-
-	const deleteTodoMutation = useMutation({
-		mutationFn: () => TodosAPI.deleteTodo(todoId),
-		onSuccess: () => {
-			queryClient.invalidateQueries(['todo', { id: todoId }])
-			//getTodos()
-			// Navigate user to `/todos` (using search params/query params)
-			navigate('/todos?deleted=true', {
-				replace: true,
-			})
+	// Delete a todo in the api
+	const deleteTodo = async (todo: Todo) => {
+		if (!todo.id) {
+			return
 		}
-	})
 
-	const updateTodoCompletedMutation = useMutation({
-		mutationFn: (newCompleted: boolean) => TodosAPI.updateTodo(todoId, {
-			completed: newCompleted,
-		}),
-		onSuccess: () => {
-			queryClient.invalidateQueries(['todo', { id: todoId }])
-		}
-	})
+		// Delete todo from the api
+		await TodosAPI.deleteTodo(todo.id)
 
+		// Navigate user to `/todos` (using search params/query params)
+		navigate('/todos?deleted=true', {
+			replace: true,
+		})
+	}
 
 	// Toggle the completed status of a todo in the api
 	const toggleTodo = async (todo: Todo) => {
-		updateTodoCompletedMutation.mutate(!todo.completed)
+		if (!todo.id) {
+			return
+		}
+
+		// Update a todo in the api
+		const updatedTodo = await TodosAPI.updateTodo(todo.id, {
+			completed: !todo.completed
+		})
+
+		// update todo state with the updated todo
+		getTodo()
 	}
 
 	if (isError) {
@@ -84,7 +84,7 @@ const TodoPage = () => {
 			<ConfirmationModal
 				show={showConfirmDelete}
 				onCancel={() => setShowConfirmDelete(false)}
-				onConfirm={() => deleteTodoMutation.mutate()}
+				onConfirm={() => deleteTodo(todo)}
 			>
 				U SURE BRO?!
 			</ConfirmationModal>
