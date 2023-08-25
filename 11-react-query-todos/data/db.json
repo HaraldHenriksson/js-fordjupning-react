@@ -2,7 +2,7 @@
   "todos": [
     {
       "title": "edited21345: Learn about the benefits of mutations",
-      "completed": false,
+      "completed": true,
       "id": 12
     },
     {
