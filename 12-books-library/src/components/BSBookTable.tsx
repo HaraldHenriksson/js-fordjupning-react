@@ -12,7 +12,7 @@ const BSBookTable: React.FC<IProps> = ({ books }) => {
     }
 
     return (
-        <Table responsive striped hover>
+        <Table responsive striped hover bordered>
             <thead>
                 <tr>
                     <th>Title</th>
