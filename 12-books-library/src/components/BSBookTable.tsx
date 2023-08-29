@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import Table from 'react-bootstrap/Table'
 import { Book } from '../types/BooksAPI.types'
 
@@ -12,12 +13,13 @@ const BSBookTable: React.FC<IProps> = ({ books }) => {
     }
 
     return (
-        <Table responsive striped hover bordered>
+        <Table responsive striped bordered hover>
             <thead>
                 <tr>
                     <th>Title</th>
                     <th>Author</th>
-                    <th className='text-end'>Pages</th>
+                    <th>Author Birthdate</th>
+                    <th>Pages</th>
                     <th>Published</th>
                 </tr>
             </thead>
@@ -25,8 +27,11 @@ const BSBookTable: React.FC<IProps> = ({ books }) => {
                 {books && books.map(book => (
                     <tr key={book.id}>
                         <td>{book.title}</td>
-                        <td>{book.author.name}</td>
-                        <td className='text-end'>{book.pages}</td>
+                        <td>
+                            <Link to={`/authors/${book.author.id}`}>{book.author.name}</Link>
+                        </td>
+                        <td>{book.author.date_of_birth}</td>
+                        <td className="text-end">{book.pages} pages</td>
                         <td>{book.published}</td>
                     </tr>
                 ))}
