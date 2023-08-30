@@ -1,8 +1,8 @@
 import { createColumnHelper } from '@tanstack/react-table'
 import WarningAlert from '../components/alerts/WarningAlert'
-import TanstackBasicTable from '../components/TanstackBasicTable'
 import useAuthors from '../hooks/useAuthors'
 import { Author } from '../types/BooksAPI.types'
+import TanstackSortableTable from '../components/TanstackSortableTable'
 
 /*
 const columns: ColumnDef<Author>[] = [
@@ -20,11 +20,24 @@ const columns: ColumnDef<Author>[] = [
 const columnHelper = createColumnHelper<Author>()
 
 const columns = [
-	columnHelper.accessor('name', {
-		header: 'Name',
+	columnHelper.group({
+		header: "Data",
+		columns: [
+			columnHelper.accessor('id', {
+				header: 'ID',
+			}),
+		],
 	}),
-	columnHelper.accessor('date_of_birth', {
-		header: 'Date of birth',
+	columnHelper.group({
+		header: 'Author Details',
+		columns: [
+			columnHelper.accessor('name', {
+				header: 'Name',
+			}),
+			columnHelper.accessor('date_of_birth', {
+				header: 'Date of birth',
+			}),
+		],
 	}),
 ]
 
@@ -45,7 +58,7 @@ const AuthorsPage = () => {
 				<p>Loading authors...</p>
 			)}
 
-			{authors && <TanstackBasicTable columns={columns} data={authors} />}
+			{authors && <TanstackSortableTable columns={columns} data={authors} />}
 		</>
 	)
 }
