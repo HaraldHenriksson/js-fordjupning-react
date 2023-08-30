@@ -1,8 +1,8 @@
 import { createColumnHelper } from '@tanstack/react-table'
 import Card from 'react-bootstrap/Card'
+import { Link } from 'react-router-dom'
 import WarningAlert from '../components/alerts/WarningAlert'
-import BSAuthorTable from '../components/BSAuthorTable'
-// import TanstackSortableTable from '../components/TanstackSortableTable'
+import TanstackSortableTable from '../components/TanstackSortableTable'
 import useAuthors from '../hooks/useAuthors'
 import { Author } from '../types/BooksAPI.types'
 import CreateAuthorForm from '../components/forms/CreateAuthorForm'
@@ -22,7 +22,6 @@ const columns: ColumnDef<Author>[] = [
 
 const columnHelper = createColumnHelper<Author>()
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const columns = [
 	columnHelper.accessor('id', {
 		header: 'ID',
@@ -32,23 +31,25 @@ const columns = [
 		columns: [
 			columnHelper.accessor('name', {
 				header: 'Name',
+				cell: props => (
+					<Link to={`/authors/${props.row.original.id}`}>
+						{props.getValue()}
+					</Link>
+				)
 			}),
 			columnHelper.accessor('date_of_birth', {
 				header: 'Date of birth',
 			}),
 		],
 	}),
-	/*
 	columnHelper.display({
 		id: 'actions',
-		cell: (props) => (
+		cell: props => (
 			<div className="flex justify-end">
-				<button className="btn btn-sm btn-primary">View</button>
-				<button className="btn btn-sm btn-warning ml-2">Edit</button>
+				<Link className="btn btn-primary btn-sm" to={`/authors/${props.row.original.id}`}>View</Link>
 			</div>
 		),
 	})
-	*/
 ]
 
 const AuthorsPage = () => {
@@ -68,8 +69,7 @@ const AuthorsPage = () => {
 				<p>Loading authors...</p>
 			)}
 
-			{/* {authors && <TanstackSortableTable columns={columns} data={authors} />} */}
-			{authors && <BSAuthorTable authors={authors} />}
+			{authors && <TanstackSortableTable columns={columns} data={authors} />}
 
 			<hr className="mb-5" />
 
