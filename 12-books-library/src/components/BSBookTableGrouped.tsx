@@ -7,7 +7,7 @@ interface IProps {
 	books: Book[]
 }
 
-const BSBookTable: React.FC<IProps> = ({ books }) => {
+const BSBookTableGrouped: React.FC<IProps> = ({ books }) => {
 	if (!books.length) {
 		return <p>No books for you!</p>
 	}
@@ -16,23 +16,27 @@ const BSBookTable: React.FC<IProps> = ({ books }) => {
 		<Table responsive striped bordered hover>
 			<thead>
 				<tr>
+					<th colSpan={3}>Book Info</th>
+					<th colSpan={2}>Author Info</th>
+				</tr>
+				<tr>
 					<th>Title</th>
-					<th>Author</th>
-					<th>Author Birthdate</th>
 					<th>Pages</th>
 					<th>Published</th>
+					<th>Author</th>
+					<th>Author Birthdate</th>
 				</tr>
 			</thead>
 			<tbody>
 				{books.map(book => (
 					<tr key={book.id}>
 						<td>{book.title}</td>
+						<td className="text-end">{book.pages} pages</td>
+						<td>{book.published}</td>
 						<td>
 							<Link to={`/authors/${book.author.id}`}>{book.author.name}</Link>
 						</td>
 						<td>{book.author.date_of_birth}</td>
-						<td className="text-end">{book.pages} pages</td>
-						<td>{book.published}</td>
 					</tr>
 				))}
 			</tbody>
@@ -40,4 +44,4 @@ const BSBookTable: React.FC<IProps> = ({ books }) => {
 	)
 }
 
-export default BSBookTable
+export default BSBookTableGrouped
