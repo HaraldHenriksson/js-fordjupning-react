@@ -83,6 +83,12 @@
       "published": "1792",
       "pages": "650",
       "id": 12
+    },
+    {
+      "title": "very funny book ",
+      "pages": "100000000",
+      "published": "1911-12-17",
+      "id": 13
     }
   ],
   "authors": [
@@ -130,6 +136,16 @@
       "id": 9,
       "name": "Mr Fancy Pants",
       "date_of_birth": "1930-01-01"
+    },
+    {
+      "name": "best author in town ",
+      "date_of_birth": "1997-11-17",
+      "id": 10
+    },
+    {
+      "name": "newst author ",
+      "date_of_birth": "1997-11-17",
+      "id": 11
     }
   ]
 }
