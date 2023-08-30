@@ -68,21 +68,21 @@ const spring = {
 
 interface IProps {
 	children: React.ReactNode
-	key: React.Key
+	page: React.Key
 }
 
-const PageTransition: React.FC<IProps> = ({ children, key }) => {
+const PageTransition: React.FC<IProps> = ({ children, page }) => {
 	return (
 		<motion.div
-			key={key}
+			key={page}
 			variants={spring}
 			initial="initial"
 			animate="enter"
 			exit="exit"
-			// initial={{ opacity: 0, scale: 0.5, rotate: -180 }}
-			// animate={{ opacity: 1, scale: 1, rotate: 0 }}
-			// transition={{ duration: 2 }}
-			// exit={{ opacity: 0, scale: 0.1, rotate: -359 }}
+		// initial={{ opacity: 0, scale: 0.5, rotate: -180 }}
+		// animate={{ opacity: 1, scale: 1, rotate: 0 }}
+		// transition={{ duration: 2 }}
+		// exit={{ opacity: 0, scale: 0.1, rotate: -359 }}
 		>
 			{children}
 		</motion.div>

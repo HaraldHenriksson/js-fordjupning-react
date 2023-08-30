@@ -10,7 +10,7 @@ const AuthorPage = () => {
 
 
 	return (
-		<PageTransition key="author-page">
+		<PageTransition page="author-page">
 			{isError && (
 				<WarningAlert>
 					An terrible, inexplicable error occurred while fetching authors. It wasn't me!
