@@ -8,6 +8,7 @@ const AuthorPage = () => {
 	const authorId = Number(id)
 	const { data: author, isError, isLoading } = useAuthor(authorId)
 
+
 	return (
 		<PageTransition key="author-page">
 			{isError && (
