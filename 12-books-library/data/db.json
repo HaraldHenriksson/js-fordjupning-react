@@ -90,6 +90,20 @@
       "published": "1984",
       "authorId": 1,
       "id": 13
+    },
+    {
+      "title": "So Long, and Thanks for All the Fish",
+      "authorId": "1",
+      "pages": "160",
+      "published": "1982",
+      "id": 14
+    },
+    {
+      "title": "Chi-quita",
+      "authorId": "7",
+      "pages": "2",
+      "published": "2023",
+      "id": 15
     }
   ],
   "authors": [

@@ -1,21 +1,25 @@
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useForm, SubmitHandler } from 'react-hook-form'
+import { useParams } from 'react-router-dom'
 import useCreateBook from '../../hooks/useCreateBook'
 import { NewBook } from '../../types/BooksAPI.types'
-import useAuthors from '../../hooks/useAuthors'
 
 const currentYear = new Date().getFullYear()
 
-const CreateBookForm = () => {
+const CreateAuthorBookForm = () => {
 	const { handleSubmit, register, formState: { errors } } = useForm<NewBook>()
 	const createAuthorMutation = useCreateBook()
-	const { data: authors } = useAuthors()
+	const { id } = useParams()
+	const authorId = Number(id)
 
 	const onCreateAuthorSubmit: SubmitHandler<NewBook> = (data) => {
 		console.log("Submitted data:", data)
 
-		createAuthorMutation.mutate(data)
+		createAuthorMutation.mutate({
+			...data,
+			authorId,
+		})
 	}
 
 	return (
@@ -31,21 +35,6 @@ const CreateBookForm = () => {
 					})}
 				/>
 				{errors.title && <p className="text-danger">A book without a title is not a book</p>}
-			</Form.Group>
-
-			<Form.Group className="mb-3" controlId="authorId">
-				<Form.Label>Author</Form.Label>
-				<Form.Select
-					{...register('authorId', {
-						required: true,
-					})}
-				>
-					{authors
-						? authors.map(author => <option key={author.id} value={author.id}>{author.name}</option>)
-						: <option value="">Loading...</option>
-					}
-				</Form.Select>
-				{errors.authorId && <p className="text-danger">A book without a author is not a book</p>}
 			</Form.Group>
 
 			<Form.Group className="mb-3" controlId="pages">
@@ -83,4 +72,4 @@ const CreateBookForm = () => {
 	)
 }
 
-export default CreateBookForm
+export default CreateAuthorBookForm
