@@ -1,13 +1,15 @@
-import { collection, getDocs } from "firebase/firestore"
-import { useEffect, useState } from "react"
+import { collection, getDocs } from 'firebase/firestore'
+import { useEffect, useState } from 'react'
+import Button from "react-bootstrap/Button"
 import ListGroup from "react-bootstrap/ListGroup"
 import { Link } from "react-router-dom"
 import AddNewTodoForm from "../components/AddNewTodoForm"
+import { db } from '../services/firebase'
 import { NewTodo, Todo, Todos } from "../types/Todo.types"
-import { db } from "../services/firebase"
 
 const TodosPage = () => {
-	const [todos, setTodos] = useState<Todos>([])
+	const [todos, setTodos] = useState<Todos | null>(null)
+	const [loading, setLoading] = useState(true)
 
 	// Create a new todo in the API
 	const addTodo = (todo: NewTodo) => {
@@ -15,12 +17,18 @@ const TodosPage = () => {
 		console.log("Would add a new todo:", todo)
 	}
 
+	// Get todos
 	const getTodos = async () => {
+		setLoading(true)
+
+		// get reference to collection "todos"
 		const colRef = collection(db, "todos")
 
+		// get query snapshot of collection
 		const snapshot = await getDocs(colRef)
 
-		const data = snapshot.docs.map(doc => {
+		// loop over all docs
+		const data: Todos = snapshot.docs.map(doc => {
 			return {
 				_id: doc.id,
 				...doc.data(),
@@ -28,18 +36,24 @@ const TodosPage = () => {
 		})
 
 		setTodos(data)
-
+		setLoading(false)
 	}
 
+	// Get todos on component mount
 	useEffect(() => {
 		getTodos()
 	}, [])
 
 	return (
 		<>
-			<h1 className="mb-3">Todos</h1>
+			<div className="d-flex justify-content-between align-items-start">
+				<h1 className="mb-3">Todos</h1>
+				<Button variant="primary" onClick={() => getTodos()}>Refresh</Button>
+			</div>
 
 			<AddNewTodoForm onAddTodo={addTodo} />
+
+			{loading && <p>Loading todos...</p>}
 
 			{todos && todos.length > 0 && (
 				<ListGroup className="todolist">
