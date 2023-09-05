@@ -7,7 +7,6 @@ const useGetTodos = () => {
   const [todos, setTodos] = useState<Todos | null>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
 
@@ -24,11 +23,13 @@ const useGetTodos = () => {
       setLoading(false)
     }
 
+    useEffect(() => {
     fetchData()
   }, [])
 
   return {
     todos,
+    fetchData,
     loading,
   }
 }
