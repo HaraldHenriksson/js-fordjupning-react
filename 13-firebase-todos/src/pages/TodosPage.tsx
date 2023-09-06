@@ -4,13 +4,23 @@ import { Link } from "react-router-dom"
 import AddNewTodoForm from "../components/AddNewTodoForm"
 import { NewTodo } from "../types/Todo.types"
 import useGetTodos from '../hooks/useGetTodos'
+import { todosCol } from "../services/firebase"
+import { addDoc } from "firebase/firestore"
 
 const TodosPage = () => {
 
 	// Create a new todo in the API
-	const addTodo = (todo: NewTodo) => {
-		// 👻
-		console.log("Would add a new todo:", todo)
+	const addTodo = async (todo: NewTodo) => {
+		try {
+			const docRef = await addDoc(todosCol, {
+				title: todo.title,
+				completed: false,
+			})
+			console.log("Document added: ", docRef.id)
+			fetchData()
+		} catch (error) {
+			console.error("Error adding document: ", error)
+		}
 	}
 
 	// Get todos
