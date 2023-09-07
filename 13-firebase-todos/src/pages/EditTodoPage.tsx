@@ -26,7 +26,6 @@ const EditTodoPage = () => {
 
 	const {
 		data: todo,
-		getData: getTodo,
 		loading
 	} = useGetTodo(documentId)
 
@@ -47,9 +46,6 @@ const EditTodoPage = () => {
 			error: "Unable to save todo"
 		})
 		await updateDoc(docRef, data)
-
-		// Get the updated todo
-		await getTodo()
 	}
 
 	return (

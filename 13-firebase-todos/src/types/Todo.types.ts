@@ -11,3 +11,7 @@ export type NewTodo = Omit<Todo, "_id">
 export type PartialTodo = Partial<Todo>
 
 export type Todos = Todo[]
+
+export type NewTodoFormData = {
+	title: string
+}
