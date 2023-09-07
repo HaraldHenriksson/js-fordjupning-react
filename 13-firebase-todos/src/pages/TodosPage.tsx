@@ -5,22 +5,21 @@ import AddNewTodoForm from "../components/AddNewTodoForm"
 import { NewTodo } from "../types/Todo.types"
 import useGetTodos from '../hooks/useGetTodos'
 import { todosCol } from "../services/firebase"
-import { addDoc } from "firebase/firestore"
+import { doc, setDoc } from "firebase/firestore"
+import { toast } from "react-toastify"
 
 const TodosPage = () => {
 
 	// Create a new todo in the API
 	const addTodo = async (todo: NewTodo) => {
-		try {
-			const docRef = await addDoc(todosCol, {
-				title: todo.title,
-				completed: false,
-			})
-			console.log("Document added: ", docRef.id)
-			fetchData()
-		} catch (error) {
-			console.error("Error adding document: ", error)
-		}
+
+		// Add a new document with a generated ID 
+		const docRef = doc(todosCol)
+
+		// Set the contents of the document
+		await setDoc(docRef, todo)
+
+		toast.success("Yay, event MORE stuff to do... 😁")
 	}
 
 	// Get todos
