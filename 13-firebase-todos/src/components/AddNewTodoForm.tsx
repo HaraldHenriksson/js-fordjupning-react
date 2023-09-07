@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
@@ -7,7 +7,7 @@ import { NewTodo } from '../types/Todo.types'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
-	onAddTodo: (todo: NewTodo) => void
+	onAddTodo: (todo: NewTodo) => Promise<void>
 }
 
 type FormData = {
@@ -15,16 +15,21 @@ type FormData = {
 }
 
 const AddNewTodoForm: React.FC<IProps> = ({ onAddTodo }) => {
-	const { handleSubmit, register, formState: { errors } } = useForm<FormData>()
+	const { handleSubmit, register, formState: { errors, isSubmitSuccessful }, reset } = useForm<FormData>()
 
-	const onFormSubmit: SubmitHandler<FormData> = (data: FormData) => {
+	const onFormSubmit: SubmitHandler<FormData> = async (data: FormData) => {
 		// create a new todo and set a new todos state
 		const newTodo: NewTodo = {
 			title: data.title,
 			completed: false,
 		}
-		onAddTodo(newTodo)   // <-- calls `addTodo()` in `App.tsx`
+		await onAddTodo(newTodo)   // <-- calls `addTodo()` in `App.tsx`
 	}
+
+	useEffect(() => {
+		// Reset form when submit is successful
+		reset()
+	}, [isSubmitSuccessful])
 
 	return (
 		<Form onSubmit={handleSubmit(onFormSubmit)} className="mb-3">
