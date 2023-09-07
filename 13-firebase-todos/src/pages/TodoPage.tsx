@@ -1,11 +1,15 @@
 import { useState } from "react"
 import Button from "react-bootstrap/Button"
-import { Link, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import ConfirmationModal from "../components/ConfirmationModal"
 import useGetTodo from "../hooks/useGetTodo"
+import { todosCol } from "../services/firebase"
+import { deleteDoc, doc } from "firebase/firestore"
+import { toast } from "react-toastify"
 
 const TodoPage = () => {
 	const [showConfirmDelete, setShowConfirmDelete] = useState(false)
+	const navigate = useNavigate()
 	const { id } = useParams()
 
 	const documentId = id as string
@@ -15,6 +19,23 @@ const TodoPage = () => {
 		getData: getTodo,
 		loading
 	} = useGetTodo(documentId)
+
+	const deleteTodo = async () => {
+
+		// Get a reference to get doc
+		const docRef = doc(todosCol, documentId)
+
+		// Delete doc
+		await deleteDoc(docRef)
+
+		toast.success("Todo Deleted")
+
+
+		// Redicet and replace the current history entry for this page 
+		navigate('/todos', {
+			replace: true,
+		})
+	}
 
 	if (loading || !todo) {
 		return <p>Loading todo...</p>
@@ -55,9 +76,7 @@ const TodoPage = () => {
 			<ConfirmationModal
 				show={showConfirmDelete}
 				onCancel={() => setShowConfirmDelete(false)}
-				onConfirm={() =>
-					console.log("Would delete todo with id:", id)
-				}
+				onConfirm={deleteTodo}
 			>
 				U SURE BRO?!
 			</ConfirmationModal>
