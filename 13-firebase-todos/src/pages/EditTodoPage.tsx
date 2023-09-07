@@ -41,13 +41,15 @@ const EditTodoPage = () => {
 
 		// Save to document in Firestore
 		const docRef = doc(todosCol, documentId)
+		toast.promise(updateDoc(docRef, data), {
+			pending: "Saving todo...",
+			success: "Todo was saved succesfully",
+			error: "Unable to save todo"
+		})
 		await updateDoc(docRef, data)
 
 		// Get the updated todo
 		await getTodo()
-
-		// 🥂
-		toast.success("Todo was saved")
 	}
 
 	return (
