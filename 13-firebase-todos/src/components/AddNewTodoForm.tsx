@@ -3,33 +3,31 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { NewTodo } from '../types/Todo.types'
+import { NewTodoFormData } from '../types/Todo.types'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
-	onAddTodo: (todo: NewTodo) => Promise<void>
-}
-
-type FormData = {
-	title: string
+	onAddTodo: (data: NewTodoFormData) => Promise<void>
 }
 
 const AddNewTodoForm: React.FC<IProps> = ({ onAddTodo }) => {
-	const { handleSubmit, register, formState: { errors, isSubmitSuccessful }, reset } = useForm<FormData>()
+	const { handleSubmit, register, formState: { errors, isSubmitSuccessful }, reset } = useForm<NewTodoFormData>()
 
-	const onFormSubmit: SubmitHandler<FormData> = async (data: FormData) => {
+	const onFormSubmit: SubmitHandler<NewTodoFormData> = async (data: NewTodoFormData) => {
 		// create a new todo and set a new todos state
-		const newTodo: NewTodo = {
-			title: data.title,
-			completed: false,
-		}
-		await onAddTodo(newTodo)   // <-- calls `addTodo()` in `App.tsx`
+		// const newTodo: NewTodo = {
+		// 	title: data.title,
+		// 	completed: false,
+		// 	created_at: serverTimestamp(),
+		// 	updated_at: serverTimestamp(),
+		// }
+		await onAddTodo(data)   // <-- calls `addTodo()` in `App.tsx`
 	}
 
 	useEffect(() => {
 		// Reset form when submit is successful
 		reset()
-	}, [isSubmitSuccessful])
+	}, [isSubmitSuccessful, reset])
 
 	return (
 		<Form onSubmit={handleSubmit(onFormSubmit)} className="mb-3">

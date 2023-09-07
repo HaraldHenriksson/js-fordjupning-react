@@ -1,33 +1,36 @@
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore'
 import Button from "react-bootstrap/Button"
 import ListGroup from "react-bootstrap/ListGroup"
 import { Link } from "react-router-dom"
+import { toast } from 'react-toastify'
 import AddNewTodoForm from "../components/AddNewTodoForm"
-import { NewTodo } from "../types/Todo.types"
 import useGetTodos from '../hooks/useGetTodos'
-import { todosCol } from "../services/firebase"
-import { doc, setDoc } from "firebase/firestore"
-import { toast } from "react-toastify"
+import { newTodosCol } from '../services/firebase'
+import { NewTodoFormData } from "../types/Todo.types"
 
 const TodosPage = () => {
-
-	// Create a new todo in the API
-	const addTodo = async (todo: NewTodo) => {
-
-		// Add a new document with a generated ID 
-		const docRef = doc(todosCol)
-
-		// Set the contents of the document
-		await setDoc(docRef, todo)
-
-		toast.success("Yay, event MORE stuff to do... 😁")
-	}
-
-	// Get todos
 	const {
 		data: todos,
 		getData: getTodos,
 		loading
 	} = useGetTodos()
+
+	// Create a new todo in the API
+	const addTodo = async (data: NewTodoFormData) => {
+		// Add a new document with a generated ID
+		const docRef = doc(newTodosCol)
+
+		// Set the contents of the document
+		await setDoc(docRef, {
+			title: data.title,
+			completed: false,
+			created_at: serverTimestamp(),
+			updated_at: serverTimestamp(),
+		})
+
+		// 🥂
+		toast.success("Yay, even MORE stuff to do... 😁")
+	}
 
 	return (
 		<>
