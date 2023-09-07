@@ -3,17 +3,17 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { NewTodoFormData } from '../types/Todo.types'
+import { TodoFormData } from '../types/Todo.types'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IProps {
-	onAddTodo: (data: NewTodoFormData) => Promise<void>
+	onAddTodo: (data: TodoFormData) => Promise<void>
 }
 
 const AddNewTodoForm: React.FC<IProps> = ({ onAddTodo }) => {
-	const { handleSubmit, register, formState: { errors, isSubmitSuccessful }, reset } = useForm<NewTodoFormData>()
+	const { handleSubmit, register, formState: { errors, isSubmitSuccessful }, reset } = useForm<TodoFormData>()
 
-	const onFormSubmit: SubmitHandler<NewTodoFormData> = async (data: NewTodoFormData) => {
+	const onFormSubmit: SubmitHandler<TodoFormData> = async (data: TodoFormData) => {
 		// create a new todo and set a new todos state
 		// const newTodo: NewTodo = {
 		// 	title: data.title,
