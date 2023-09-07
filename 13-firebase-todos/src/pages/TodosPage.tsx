@@ -25,16 +25,16 @@ const TodosPage = () => {
 
 	// Get todos
 	const {
-		todos,
-		fetchData,
-		loading,
+		data: todos,
+		getData: getTodos,
+		loading
 	} = useGetTodos()
 
 	return (
 		<>
 			<div className="d-flex justify-content-between align-items-start">
 				<h1 className="mb-3">Todos</h1>
-				<Button variant="primary" onClick={fetchData}>Refresh</Button>
+				<Button variant="primary" onClick={() => getTodos()}>Refresh</Button>
 			</div>
 
 			<AddNewTodoForm onAddTodo={addTodo} />
