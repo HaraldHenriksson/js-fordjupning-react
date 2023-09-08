@@ -8,9 +8,11 @@ import { useRef } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { SignUpCredentials } from '../types/User.types'
+import useAuth from '../hooks/useAuth'
 
 const SignupPage = () => {
     const { handleSubmit, register, watch, formState: { errors } } = useForm<SignUpCredentials>()
+    const { signup } = useAuth()
 
     // Watch the current value of `password` form field
     const passwordRef = useRef("")
@@ -18,6 +20,8 @@ const SignupPage = () => {
 
     const onSignup: SubmitHandler<SignUpCredentials> = async (data) => {
         console.log("WOuld sign up user", data)
+
+        signup(data.email, data.password)
     }
 
     return (
