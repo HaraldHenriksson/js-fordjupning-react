@@ -21,7 +21,8 @@ const SignupPage = () => {
     const onSignup: SubmitHandler<SignUpCredentials> = async (data) => {
         console.log("WOuld sign up user", data)
 
-        signup(data.email, data.password)
+        const userCredential = await signup(data.email, data.password)
+        console.log("YAYYYYY I GOTS ACCOUNT!!!!!!!!!!!", userCredential)
     }
 
     return (
