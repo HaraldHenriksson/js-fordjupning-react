@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app"
 import { CollectionReference, collection, DocumentData, getFirestore } from "firebase/firestore"
 import { NewTodo, Todo } from "../types/Todo.types"
+import { getAuth } from "firebase/auth"
 
 // Your web app's Firebase configuration
 
@@ -15,6 +16,9 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
+
+// Get auth instance 
+export const auth = getAuth(app)
 
 // Get Firestore instance
 export const db = getFirestore(app)
