@@ -1,9 +1,10 @@
-import { UserCredential, createUserWithEmailAndPassword } from 'firebase/auth'
+import { UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 import { createContext, useState } from 'react'
 import { auth } from '../services/firebase'
 
 type AuthContextType = {
     signup: (email: string, password: string) => Promise<UserCredential>
+    login: (email: string, password: string) => Promise<UserCredential>
     userEmail: string | null
 }
 
@@ -24,8 +25,16 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         return await createUserWithEmailAndPassword(auth, email, password)
     }
 
+    const login = async (email: string, password: string) => {
+        console.log("Would login user from AuthContext", email, password)
+
+        // Login user in Firebase Auth
+        return await signInWithEmailAndPassword(auth, email, password)
+    }
+
     return <AuthContext.Provider value={{
         signup,
+        login,
         userEmail,
     }}>
         {children}

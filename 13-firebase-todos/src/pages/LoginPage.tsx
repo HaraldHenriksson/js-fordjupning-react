@@ -7,16 +7,27 @@ import Row from 'react-bootstrap/Row'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { LoginCredentials } from '../types/User.types'
+import useAuth from '../hooks/useAuth'
+import { useState } from 'react'
 
 const LoginPage = () => {
     const { handleSubmit, register, formState: { errors } } = useForm<LoginCredentials>()
+    const { login } = useAuth()
+    const navigate = useNavigate()
+    const [error, setError] = useState<string | null>(null)
 
     const onLogin: SubmitHandler<LoginCredentials> = async (data) => {
-        console.log("Would login user", data)
+        try {
+            await login(data.email, data.password);
+            navigate('/')
+        } catch (error) {
+            setError("Failed to sign up.")
+        }
     }
 
     return (
         <Row>
+            {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
             <Col md={{ span: 6, offset: 3 }}>
                 <Card>
                     <Card.Body>
