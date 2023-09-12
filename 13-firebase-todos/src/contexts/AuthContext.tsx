@@ -42,11 +42,11 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         return () => unsubscribe()
     }, [])
 
-    const signup = async (email: string, password: string) => {
+    const signup = (email: string, password: string) => {
         console.log("Whould signup use from AuthContext", email, password)
 
         // Sign up user in Firebase Auth
-        return await createUserWithEmailAndPassword(auth, email, password)
+        return createUserWithEmailAndPassword(auth, email, password)
     }
 
     const login = async (email: string, password: string) => {
