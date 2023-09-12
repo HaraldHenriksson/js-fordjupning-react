@@ -11,6 +11,13 @@ h6 {
   margin-bottom: 0.75em;
 }
 
+#App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+}
+
 #global-loading-spinner-wrapper {
   position: absolute;
   top: 4.5rem;
@@ -50,6 +57,7 @@ h6 {
   .list-group-item {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
     .todo-title {
     }
