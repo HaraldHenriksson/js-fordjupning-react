@@ -94,7 +94,9 @@ const SignupPage = () => {
                                 {errors.passwordConfirm && <p className="invalid">{errors.passwordConfirm.message ?? "Invalid value"}</p>}
                             </Form.Group>
 
-                            <Button disabled={loading} variant="primary" type="submit">Create Account</Button>
+                            <Button disabled={loading} variant="primary" type="submit">{loading
+                                ? "Creating account..."
+                                : "Create Account"}</Button>
                         </Form>
 
                     </Card.Body>

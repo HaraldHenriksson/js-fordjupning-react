@@ -9,20 +9,28 @@ import { Link, useNavigate } from 'react-router-dom'
 import { LoginCredentials } from '../types/User.types'
 import useAuth from '../hooks/useAuth'
 import { useState } from 'react'
+import { FirebaseError } from 'firebase/app'
 
 const LoginPage = () => {
     const { handleSubmit, register, formState: { errors } } = useForm<LoginCredentials>()
+    const [loading, setLoading] = useState(false)
     const { login } = useAuth()
     const navigate = useNavigate()
     const [error, setError] = useState<string | null>(null)
 
     const onLogin: SubmitHandler<LoginCredentials> = async (data) => {
         try {
+            setLoading(true)
             await login(data.email, data.password);
             navigate('/')
         } catch (error) {
-            setError("Failed to sign up.")
+            if (error instanceof FirebaseError) {
+                setError(error.message)
+            } else {
+                setError('Unknown Error')
+            }
         }
+        setLoading(false)
     }
 
     return (
@@ -63,7 +71,15 @@ const LoginPage = () => {
                                 <Form.Text>At least 6 characters</Form.Text>
                             </Form.Group>
 
-                            <Button variant="primary" type="submit">Log In</Button>
+                            <Button
+                                disabled={loading}
+                                variant="primary"
+                                type="submit"
+                            >
+                                {loading
+                                    ? "Logging in..."
+                                    : "Log In"}
+                            </Button>
                         </Form>
 
                         <div className="text-center">
