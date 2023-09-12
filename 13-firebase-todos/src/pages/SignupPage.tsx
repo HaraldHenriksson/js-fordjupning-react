@@ -22,6 +22,8 @@ const SignupPage = () => {
     passwordRef.current = watch('password')
 
     const onSignup: SubmitHandler<SignUpCredentials> = async (data) => {
+        // Clear any pervious error state
+        setError(null)
         try {
             const userCredential = await signup(data.email, data.password);
             console.log("YAYYYYY I GOTS ACCOUNT!!!!!!!!!!!", userCredential);
@@ -29,7 +31,7 @@ const SignupPage = () => {
         } catch (err) {
             if (err instanceof FirebaseError) {
                 console.error("Error signing up:", err.message);
-                setError("Failed to sign up.");  // Set error message upon failure
+                setError(err.message);  // Set error message upon failure
             } else {
                 setError('Unknown Error')
             }
