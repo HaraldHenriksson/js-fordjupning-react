@@ -1,11 +1,12 @@
 import Container from 'react-bootstrap/Container'
 import Navbar from 'react-bootstrap/Navbar'
+import { NavDropdown } from 'react-bootstrap'
 import Nav from 'react-bootstrap/Nav'
 import { NavLink, Link } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
 
 const Navigation = () => {
-	const { currentUser } = useAuth()
+	const { currentUser, userEmail } = useAuth()
 
 	return (
 		<Navbar bg="dark" variant="dark" expand="md">
@@ -18,7 +19,10 @@ const Navigation = () => {
 						{currentUser ? (<>
 							{/* User is logged in */}
 							<Nav.Link as={NavLink} end to="/todos">Todos</Nav.Link>
-							<Nav.Link as={NavLink} end to="/logout">Logout</Nav.Link>
+
+							<NavDropdown title={userEmail}>
+								<NavDropdown.Item as={NavLink} end to="/logout">Logout</NavDropdown.Item>
+							</NavDropdown>
 						</>) : (<>
 							{/* No user is logged in */}
 							<Nav.Link as={NavLink} end to="/login">Login</Nav.Link>

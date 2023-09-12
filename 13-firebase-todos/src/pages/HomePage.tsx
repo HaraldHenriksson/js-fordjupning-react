@@ -14,7 +14,7 @@ const HomePage = () => {
 				<h2>Because when you're life is on fire, you need a todo list</h2>
 
 				{currentUser
-					? <p>You are logged in as {currentUser.email}</p>
+					? <p>You are logged in as {currentUser.email} {currentUser.uid}</p>
 					: <p> You are a hax0r</p>}
 
 				<ButtonGroup>
