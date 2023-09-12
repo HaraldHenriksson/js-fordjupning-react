@@ -19,27 +19,29 @@ type AuthContextProps = {
 }
 
 const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
-    const [userEmail, _setUserEmail] = useState<string | null>(null)
+    const [currentUser, setCurrentUser] = useState<User | null>(null)
+    const [userEmail, setUserEmail] = useState<string | null>(null)
     const [isAuthDetermined, setIsAuthDetermined] = useState(false)
 
     useEffect(() => {
         // Set up the authentication state observer
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             console.log("Auth state determined:", user)
+            setCurrentUser(user)
             if (user) {
                 // User is logged in
-                _setUserEmail(user.email)
+                setUserEmail(user.email)
 
             } else {
                 // User is logged out
-                _setUserEmail(null)
+                setUserEmail(null)
             }
             setIsAuthDetermined(true)
 
         })
 
         // Clean up the observer on component unmount
-        return () => unsubscribe()
+        return unsubscribe
     }, [])
 
     const signup = (email: string, password: string) => {
