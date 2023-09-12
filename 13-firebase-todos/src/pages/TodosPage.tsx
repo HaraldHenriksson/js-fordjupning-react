@@ -7,6 +7,7 @@ import useGetTodos from '../hooks/useGetTodos'
 import { newTodosCol } from '../services/firebase'
 import { TodoFormData } from "../types/Todo.types"
 import { firebaseTimestampToString } from '../helpers/time'
+import { Container } from 'react-bootstrap'
 
 const TodosPage = () => {
 	const {
@@ -32,36 +33,38 @@ const TodosPage = () => {
 
 	return (
 		<>
-			<div className="d-flex justify-content-between align-items-start">
-				<h1 className="mb-3">Todos</h1>
-			</div>
+			<Container className='py-3'>
+				<div className="d-flex justify-content-between align-items-start">
+					<h1 className="mb-3">Todos</h1>
+				</div>
 
-			<TodoForm onSave={addTodo} />
+				<TodoForm onSave={addTodo} />
 
-			{loading && <p>Loading todos...</p>}
+				{loading && <p>Loading todos...</p>}
 
-			{todos && todos.length > 0 && (
-				<ListGroup className="todolist">
-					{todos.map((todo) => (
-						<ListGroup.Item
-							action
-							as={Link}
-							key={todo._id}
-							className={todo.completed ? "done" : ""}
-							to={`/todos/${todo._id}`}
-						>
-							<span className="todo-title">{todo.title}</span>
-							<span className="created">
-								{firebaseTimestampToString(todo.created_at)}
-							</span>
-						</ListGroup.Item>
-					))}
-				</ListGroup>
-			)}
+				{todos && todos.length > 0 && (
+					<ListGroup className="todolist">
+						{todos.map((todo) => (
+							<ListGroup.Item
+								action
+								as={Link}
+								key={todo._id}
+								className={todo.completed ? "done" : ""}
+								to={`/todos/${todo._id}`}
+							>
+								<span className="todo-title">{todo.title}</span>
+								<span className="created">
+									{firebaseTimestampToString(todo.created_at)}
+								</span>
+							</ListGroup.Item>
+						))}
+					</ListGroup>
+				)}
 
-			{todos && todos.length === 0 && (
-				<p>Yayyy, you have 0 todos to do</p>
-			)}
+				{todos && todos.length === 0 && (
+					<p>Yayyy, you have 0 todos to do</p>
+				)}
+			</Container>
 		</>
 	)
 }

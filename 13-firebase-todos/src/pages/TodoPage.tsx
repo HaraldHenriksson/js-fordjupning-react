@@ -6,6 +6,7 @@ import useGetTodo from "../hooks/useGetTodo"
 import { todosCol } from "../services/firebase"
 import { deleteDoc, doc } from "firebase/firestore"
 import { toast } from "react-toastify"
+import { Container } from "react-bootstrap"
 
 const TodoPage = () => {
 	const [showConfirmDelete, setShowConfirmDelete] = useState(false)
@@ -42,46 +43,48 @@ const TodoPage = () => {
 
 	return (
 		<>
-			<div className="d-flex justify-content-between align-items-start">
-				<h1>{todo.title}</h1>
-			</div>
+			<Container className="py-3">
+				<div className="d-flex justify-content-between align-items-start">
+					<h1>{todo.title}</h1>
+				</div>
 
-			<p>
-				<strong>Status:</strong>{" "}
-				{todo.completed ? "Completed" : "Not completed"}
-			</p>
+				<p>
+					<strong>Status:</strong>{" "}
+					{todo.completed ? "Completed" : "Not completed"}
+				</p>
 
-			<div className="buttons mb-3">
-				<Button
-					variant="success"
-					onClick={() => console.log("Would toggle todo")}
+				<div className="buttons mb-3">
+					<Button
+						variant="success"
+						onClick={() => console.log("Would toggle todo")}
+					>
+						Toggle
+					</Button>
+
+					<Link to={`/todos/${id}/edit`}>
+						<Button variant="warning">Edit</Button>
+					</Link>
+
+					<Button
+						variant="danger"
+						onClick={() => setShowConfirmDelete(true)}
+					>
+						Delete
+					</Button>
+				</div>
+
+				<ConfirmationModal
+					show={showConfirmDelete}
+					onCancel={() => setShowConfirmDelete(false)}
+					onConfirm={deleteTodo}
 				>
-					Toggle
-				</Button>
+					U SURE BRO?!
+				</ConfirmationModal>
 
-				<Link to={`/todos/${id}/edit`}>
-					<Button variant="warning">Edit</Button>
+				<Link to="/todos">
+					<Button variant="secondary">&laquo; All todos</Button>
 				</Link>
-
-				<Button
-					variant="danger"
-					onClick={() => setShowConfirmDelete(true)}
-				>
-					Delete
-				</Button>
-			</div>
-
-			<ConfirmationModal
-				show={showConfirmDelete}
-				onCancel={() => setShowConfirmDelete(false)}
-				onConfirm={deleteTodo}
-			>
-				U SURE BRO?!
-			</ConfirmationModal>
-
-			<Link to="/todos">
-				<Button variant="secondary">&laquo; All todos</Button>
-			</Link>
+			</Container>
 		</>
 	)
 }
