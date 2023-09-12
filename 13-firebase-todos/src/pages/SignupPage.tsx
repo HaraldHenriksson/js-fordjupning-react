@@ -30,8 +30,9 @@ const SignupPage = () => {
             if (err instanceof FirebaseError) {
                 console.error("Error signing up:", err.message);
                 setError("Failed to sign up.");  // Set error message upon failure
+            } else {
+                setError('Unknown Error')
             }
-
         }
     }
 
