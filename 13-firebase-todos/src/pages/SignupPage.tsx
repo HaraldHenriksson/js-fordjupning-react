@@ -13,6 +13,7 @@ import { FirebaseError } from 'firebase/app'
 
 const SignupPage = () => {
     const { handleSubmit, register, watch, formState: { errors } } = useForm<SignUpCredentials>()
+    const [loading, setLoading] = useState(false)
     const { signup } = useAuth()
     const navigate = useNavigate()
     const [error, setError] = useState<string | null>(null)
@@ -25,16 +26,16 @@ const SignupPage = () => {
         // Clear any pervious error state
         setError(null)
         try {
-            const userCredential = await signup(data.email, data.password);
-            console.log("YAYYYYY I GOTS ACCOUNT!!!!!!!!!!!", userCredential);
+            setLoading(true)
+            await signup(data.email, data.password);
             navigate('/');  // Redirect to HomePage upon successful signup
         } catch (err) {
             if (err instanceof FirebaseError) {
-                console.error("Error signing up:", err.message);
                 setError(err.message);  // Set error message upon failure
             } else {
                 setError('Unknown Error')
             }
+            setLoading(false)
         }
     }
 
@@ -93,7 +94,7 @@ const SignupPage = () => {
                                 {errors.passwordConfirm && <p className="invalid">{errors.passwordConfirm.message ?? "Invalid value"}</p>}
                             </Form.Group>
 
-                            <Button variant="primary" type="submit">Create Account</Button>
+                            <Button disabled={loading} variant="primary" type="submit">Create Account</Button>
                         </Form>
 
                     </Card.Body>
