@@ -47,6 +47,7 @@ const LoginPage = () => {
                                 <Form.Control
                                     placeholder="example@example.com"
                                     type="email"
+                                    autoComplete='email'
                                     {...register('email', {
                                         required: "You have to enter an email",
                                     })}
