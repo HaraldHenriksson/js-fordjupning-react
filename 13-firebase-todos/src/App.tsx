@@ -10,17 +10,10 @@ import TodosPage from './pages/TodosPage'
 import './assets/scss/App.scss'
 import SignupPage from './pages/SignupPage'
 import LoginPage from './pages/LoginPage'
-import useAuth from './hooks/useAuth'
-import GlobalLoadingSpinner from './components/GlobalLoadingSpinner'
 import ProtectedRoute from './components/ProtectedRoute'
 import LogoutPage from './pages/Logout'
 
 const App = () => {
-	const { isAuthDetermined } = useAuth()
-
-	if (!isAuthDetermined) {
-		return <GlobalLoadingSpinner />
-	}
 
 	return (
 		<div id="App">

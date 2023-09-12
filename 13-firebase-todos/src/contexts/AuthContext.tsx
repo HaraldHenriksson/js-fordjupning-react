@@ -1,6 +1,7 @@
 import { UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, User, onAuthStateChanged, signOut } from 'firebase/auth'
 import { createContext, useEffect, useState } from 'react'
 import { auth } from '../services/firebase'
+import SyncLoader from 'react-spinners/SyncLoader'
 
 type AuthContextType = {
     signup: (email: string, password: string) => Promise<UserCredential>
@@ -21,7 +22,7 @@ type AuthContextProps = {
 const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     const [_currentUser, setCurrentUser] = useState<User | null>(null)
     const [userEmail, setUserEmail] = useState<string | null>(null)
-    const [isAuthDetermined, setIsAuthDetermined] = useState(false)
+    const [isAuthDetermined, setIsAuthDetermined] = useState(true)
 
     useEffect(() => {
         // Set up the authentication state observer
@@ -36,7 +37,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
                 // User is logged out
                 setUserEmail(null)
             }
-            setIsAuthDetermined(true)
+            setIsAuthDetermined(false)
 
         })
 
@@ -70,7 +71,13 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         currentUser: auth.currentUser,
         isAuthDetermined
     }}>
-        {children}
+        {isAuthDetermined ? (
+            <div id="initial-loader">
+                <SyncLoader color={'#888'} size={15} speedMultiplier={1.1} />
+            </div>
+        ) : (
+            <>{children}</>
+        )}
     </AuthContext.Provider>
 }
 
