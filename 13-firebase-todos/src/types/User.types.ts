@@ -9,3 +9,7 @@ export type LoginCredentials = {
     password: string
     passwordConfirm: string
 }
+
+export type UpdateProfileFormData = {
+    
+}

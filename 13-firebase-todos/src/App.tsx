@@ -11,6 +11,7 @@ import SignupPage from './pages/SignupPage'
 import LoginPage from './pages/LoginPage'
 import RequireAuth from './components/RequireAuth'
 import LogoutPage from './pages/Logout'
+import UpdateProfile from './pages/UpdateProfile'
 
 const App = () => {
 	return (
@@ -53,6 +54,12 @@ const App = () => {
 						</RequireAuth>
 					} />
 				</Route>
+
+				<Route path="/update-profile" element={
+					<RequireAuth>
+						<UpdateProfile />
+					</RequireAuth>
+				} />
 
 			</Routes>
 
