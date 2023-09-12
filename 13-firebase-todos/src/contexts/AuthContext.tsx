@@ -19,7 +19,7 @@ type AuthContextProps = {
 }
 
 const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
-    const [currentUser, setCurrentUser] = useState<User | null>(null)
+    const [_currentUser, setCurrentUser] = useState<User | null>(null)
     const [userEmail, setUserEmail] = useState<string | null>(null)
     const [isAuthDetermined, setIsAuthDetermined] = useState(false)
 

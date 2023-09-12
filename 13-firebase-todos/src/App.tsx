@@ -13,6 +13,7 @@ import LoginPage from './pages/LoginPage'
 import useAuth from './hooks/useAuth'
 import GlobalLoadingSpinner from './components/GlobalLoadingSpinner'
 import ProtectedRoute from './components/ProtectedRoute'
+import LogoutPage from './pages/Logout'
 
 const App = () => {
 	const { isAuthDetermined } = useAuth()
@@ -30,6 +31,7 @@ const App = () => {
 					<Route path="/" element={<HomePage />} />
 					<Route path="/signup" element={<SignupPage />} />
 					<Route path="/login" element={<LoginPage />} />
+					<Route path="/logout" element={<LogoutPage />} />
 
 					{/* Use ProtectedRoute as a wrapper */}
 					<Route path="/todos" element={<ProtectedRoute />}>
