@@ -9,6 +9,7 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { SignUpCredentials } from '../types/User.types'
 import useAuth from '../hooks/useAuth'
+import { FirebaseError } from 'firebase/app'
 
 const SignupPage = () => {
     const { handleSubmit, register, watch, formState: { errors } } = useForm<SignUpCredentials>()
@@ -26,8 +27,11 @@ const SignupPage = () => {
             console.log("YAYYYYY I GOTS ACCOUNT!!!!!!!!!!!", userCredential);
             navigate('/');  // Redirect to HomePage upon successful signup
         } catch (err) {
-            console.error("Error signing up:", err);
-            setError("Failed to sign up.");  // Set error message upon failure
+            if (err instanceof FirebaseError) {
+                console.error("Error signing up:", err.message);
+                setError("Failed to sign up.");  // Set error message upon failure
+            }
+
         }
     }
 
