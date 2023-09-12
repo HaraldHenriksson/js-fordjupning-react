@@ -53,6 +53,7 @@ const SignupPage = () => {
                                 <Form.Control
                                     placeholder="example@example.com"
                                     type="email"
+                                    autoComplete='email'
                                     {...register('email', {
                                         required: "You have to enter an email",
                                     })}
@@ -64,6 +65,7 @@ const SignupPage = () => {
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control
                                     type="password"
+                                    autoComplete="new-password"
                                     {...register('password', {
                                         required: "You're kidding, right? Enter a password, stupid",
                                         minLength: {
@@ -80,6 +82,7 @@ const SignupPage = () => {
                                 <Form.Label>Confirm Password</Form.Label>
                                 <Form.Control
                                     type="password"
+                                    autoComplete='off'
                                     {...register('passwordConfirm', {
                                         required: "Enter your password again.........",
                                         minLength: {
