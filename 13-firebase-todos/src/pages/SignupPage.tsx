@@ -40,7 +40,7 @@ const SignupPage = () => {
     }
 
     return (
-        <Container className='py-3'>
+        <Container className='py-3 center-y'>
             <Row>
                 {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
                 <Col md={{ span: 6, offset: 3 }}>

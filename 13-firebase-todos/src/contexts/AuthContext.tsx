@@ -38,7 +38,6 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
                 setUserEmail(null)
             }
             setIsAuthDetermined(false)
-
         })
 
         // Clean up the observer on component unmount
