@@ -12,6 +12,7 @@ import LoginPage from './pages/LoginPage'
 import RequireAuth from './components/RequireAuth'
 import LogoutPage from './pages/Logout'
 import UpdateProfile from './pages/UpdateProfile'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
 
 const App = () => {
 	return (
@@ -24,6 +25,7 @@ const App = () => {
 				<Route path="/login" element={<LoginPage />} />
 				<Route path="/logout" element={<LogoutPage />} />
 				<Route path="/signup" element={<SignupPage />} />
+				<Route path='/forgot-password' element={<ForgotPasswordPage />} />
 
 				{/* Protected Routes */}
 				<Route path="/" element={

@@ -42,7 +42,10 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
             if (user) {
                 // User is logged in
                 setUserEmail(user.email)
-
+                setUserName(user.displayName)
+                setUserPhotoUrl(user.photoURL)
+                setUserName(null)
+                setUserPhotoUrl(null)
             } else {
                 // User is logged out
                 setUserEmail(null)
@@ -109,7 +112,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         }
     }
 
-    const setPhotoUrl = async (name: string) => {
+    const setPhotoUrl = async (url: string) => {
         if (currentUser && url !== currentUser.photoURL) {
             await updateProfile(currentUser, { photoURL: url })
             await reloadUser()
@@ -128,7 +131,9 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         setEmail,
         setPassword,
         setDisplayName,
-        setPhotoUrl
+        setPhotoUrl,
+        userName,
+        userPhotoUrl
     }}>
         {isAuthDetermined ? (
             <div id="initial-loader">
