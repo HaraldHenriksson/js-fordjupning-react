@@ -1,4 +1,4 @@
-import { UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, User, onAuthStateChanged, signOut, sendPasswordResetEmail } from 'firebase/auth'
+import { UserCredential, createUserWithEmailAndPassword, signInWithEmailAndPassword, User, onAuthStateChanged, signOut, sendPasswordResetEmail, updateEmail, updatePassword, updateProfile } from 'firebase/auth'
 import { createContext, useEffect, useState } from 'react'
 import { auth } from '../services/firebase'
 import SyncLoader from 'react-spinners/SyncLoader'
@@ -89,16 +89,31 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         }
     }
 
-    const setEmail = (email: string) => {
+    const setEmail = async (email: string) => {
+        if (currentUser) {
+            await updateEmail(currentUser, email)
+            await reloadUser()
+        }
     }
 
-    const setPassword = (password: string) => {
+    const setPassword = async (password: string) => {
+        if (currentUser) {
+            await updatePassword(currentUser, password)
+        }
     }
 
-    const setDisplayName = (name: string) => {
+    const setDisplayName = async (name: string) => {
+        if (currentUser && name !== currentUser.displayName) {
+            await updateProfile(currentUser, { displayName: name })
+            await reloadUser()
+        }
     }
 
-    const setPhotoUrl = (name: string) => {
+    const setPhotoUrl = async (name: string) => {
+        if (currentUser && url !== currentUser.photoURL) {
+            await updateProfile(currentUser, { photoURL: url })
+            await reloadUser()
+        }
     }
 
     return <AuthContext.Provider value={{
