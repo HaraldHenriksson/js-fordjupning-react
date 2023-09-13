@@ -15,42 +15,57 @@ const UpdateProfile = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
     const { handleSubmit, register, watch, formState: { errors } } = useForm<UpdateProfileFormData>()
-    const { signup } = useAuth()
+    const {
+        signup,
+        reloadUser,
+        setEmail,
+        setPassword,
+        setDisplayName,
+        setPhotoUrl
+    } = useAuth()
 
     // Watch the current value of `password` form field
     const passwordRef = useRef("")
     passwordRef.current = watch('password')
 
     const onUpdateProfile: SubmitHandler<UpdateProfileFormData> = async (data) => {
-        // Clear any previous error state
         setErrorMessage(null)
+        setLoading(true)
 
-        // Update user profile
         try {
-            // Disable update-button while update is in progress
-            setLoading(true)
+            if (data.displayName) {
+                await setDisplayName(data.displayName)
+            }
 
-            // Update displayName *ONLY* if it has changed
+            if (data.photoURL) {
+                await setPhotoUrl(data.photoURL)
+            }
 
-            // Update email *ONLY* if it has changed
+            if (data.email) {
+                await setEmail(data.email)
+            }
 
-            // Update password *ONLY* if the user has provided a new password to set
+            if (data.password && data.password === data.confirmPassword) {
+                await setPassword(data.password)
+            } else if (data.password && data.password !== data.confirmPassword) {
+                setErrorMessage("Passwords do not match.")
+                setLoading(false)
+                return
+            }
 
-            // Reload user data
+            // Given that the reloadUser is already integrated in setEmail, setDisplayName, and setPhotoUrl,
+            // it's not needed to call it separately unless there's a specific scenario where the user needs to be reloaded outside these actions.
 
-            // Show success toast 🥂
-
-            // Enable update-button again
-
+            setLoading(false)
         } catch (error) {
             if (error instanceof FirebaseError) {
                 setErrorMessage(error.message)
             } else {
                 setErrorMessage("Something went wrong. Have you tried turning it off and on again?")
             }
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     return (
         <Container className="py-3 center-y">
@@ -71,6 +86,7 @@ const UpdateProfile = () => {
                                     <Form.Control
                                         placeholder="Sean Banan"
                                         type="text"
+                                        {...register('displayName')}
                                     />
                                 </Form.Group>
 
@@ -79,6 +95,7 @@ const UpdateProfile = () => {
                                     <Form.Control
                                         placeholder="https://www.chiquita.com/Bananana.jpg"
                                         type="url"
+                                        {...register('photoURL')}
                                     />
                                 </Form.Group>
 
@@ -87,7 +104,7 @@ const UpdateProfile = () => {
                                     <Form.Control
                                         placeholder="snelhest2000@horsemail.com"
                                         type="email"
-                                        autoComplete='email'
+                                        {...register('email')}
                                     />
                                 </Form.Group>
 
@@ -96,6 +113,7 @@ const UpdateProfile = () => {
                                     <Form.Control
                                         type="password"
                                         autoComplete="new-password"
+                                        {...register('password')}
                                     />
                                     <Form.Text>At least 6 characters</Form.Text>
                                 </Form.Group>
@@ -105,6 +123,7 @@ const UpdateProfile = () => {
                                     <Form.Control
                                         type="password"
                                         autoComplete="off"
+                                        {...register('confirmPassword')}
                                     />
                                 </Form.Group>
 
