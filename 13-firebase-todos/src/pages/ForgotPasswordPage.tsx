@@ -1,6 +1,6 @@
 import { Alert, Container, Button, Card, Col, Form, Row } from 'react-bootstrap'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import useAuth from '../hooks/useAuth'
 import { FirebaseError } from 'firebase/app'
 import { useState } from 'react'
@@ -11,9 +11,9 @@ type ForgotPasswordForm = {
 
 const ForgotPasswordPage = () => {
     const { handleSubmit, register, formState: { errors } } = useForm<ForgotPasswordForm>()
+    const [successMessage, setSuccessMessage] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
     const { resetPassword } = useAuth()
-    const navigate = useNavigate()
     const [error, setError] = useState<string | null>(null)
 
     const onSubmit: SubmitHandler<ForgotPasswordForm> = async (data) => {
@@ -22,7 +22,9 @@ const ForgotPasswordPage = () => {
         try {
             setLoading(true)
             await resetPassword(data.email)
-            navigate('/login')  // Redirect to LoginPage upon successful password reset
+
+            // If successful, tell the user to check their email
+            setSuccessMessage("We've sent you a password reset link to the provided email.")
         } catch (err) {
             if (err instanceof FirebaseError) {
                 setError(err.message);  // Set error message upon failure
@@ -37,6 +39,7 @@ const ForgotPasswordPage = () => {
         <Container className='py-3 center-y'>
             <Row>
                 {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
+                {successMessage && (<Alert variant="success">{successMessage}</Alert>)}
                 <Col md={{ span: 6, offset: 3 }}>
                     <Card>
                         <Card.Body>
