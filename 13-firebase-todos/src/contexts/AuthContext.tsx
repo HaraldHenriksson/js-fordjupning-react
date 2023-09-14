@@ -84,12 +84,9 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     }
 
     const resetPassword = async (email: string) => {
-        try {
-            await sendPasswordResetEmail(auth, email)
-            console.log("Password reset email sent!")
-        } catch (error) {
-            console.error("Error sending password reset email:", error)
-        }
+        await sendPasswordResetEmail(auth, email, {
+            url: window.location.origin + "/login"
+        })
     }
 
     const setEmail = async (email: string) => {

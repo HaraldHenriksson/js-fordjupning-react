@@ -25,6 +25,9 @@ const ForgotPasswordPage = () => {
 
             // If successful, tell the user to check their email
             setSuccessMessage("We've sent you a password reset link to the provided email.")
+
+            // Re-enable button
+            setLoading(false)
         } catch (err) {
             if (err instanceof FirebaseError) {
                 setError(err.message);  // Set error message upon failure
@@ -38,12 +41,14 @@ const ForgotPasswordPage = () => {
     return (
         <Container className='py-3 center-y'>
             <Row>
-                {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
-                {successMessage && (<Alert variant="success">{successMessage}</Alert>)}
+
                 <Col md={{ span: 6, offset: 3 }}>
                     <Card>
                         <Card.Body>
                             <Card.Title className="mb-3">Forgot Password</Card.Title>
+
+                            {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
+                            {successMessage && (<Alert variant="success">{successMessage}</Alert>)}
 
                             <Form onSubmit={handleSubmit(onSubmit)}>
                                 <Form.Group controlId="email" className="mb-3">

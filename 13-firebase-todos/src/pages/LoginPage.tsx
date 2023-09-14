@@ -37,11 +37,12 @@ const LoginPage = () => {
     return (
         <Container className='py-3 center-y'>
             <Row>
-                {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
                 <Col md={{ span: 6, offset: 3 }}>
                     <Card>
                         <Card.Body>
                             <Card.Title className="mb-3">Login</Card.Title>
+
+                            {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
 
                             <Form onSubmit={handleSubmit(onLogin)}>
                                 <Form.Group controlId="email" className="mb-3">
