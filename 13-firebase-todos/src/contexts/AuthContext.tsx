@@ -82,37 +82,30 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         }
     }
 
-    const resetPassword = async (email: string) => {
-        await sendPasswordResetEmail(auth, email, {
-            url: window.location.origin + "/login"
+    const resetPassword = (email: string) => {
+        return sendPasswordResetEmail(auth, email, {
+            url: window.location.origin + "/login",
         })
     }
 
-    const setEmail = async (email: string) => {
-        if (currentUser) {
-            await updateEmail(currentUser, email)
-            await reloadUser()
-        }
+    const setEmail = (email: string) => {
+        if (!currentUser) { throw new Error("Current User is null!") }
+        return updateEmail(currentUser, email)
     }
 
-    const setPassword = async (password: string) => {
-        if (currentUser) {
-            await updatePassword(currentUser, password)
-        }
+    const setPassword = (password: string) => {
+        if (!currentUser) { throw new Error("Current User is null!") }
+        return updatePassword(currentUser, password)
     }
 
-    const setDisplayName = async (name: string) => {
-        if (currentUser && name !== currentUser.displayName) {
-            await updateProfile(currentUser, { displayName: name })
-            await reloadUser()
-        }
+    const setDisplayName = (displayName: string) => {
+        if (!currentUser) { throw new Error("Current User is null!") }
+        return updateProfile(currentUser, { displayName })
     }
 
-    const setPhotoUrl = async (url: string) => {
-        if (currentUser && url !== currentUser.photoURL) {
-            await updateProfile(currentUser, { photoURL: url })
-            await reloadUser()
-        }
+    const setPhotoUrl = (photoURL: string) => {
+        if (!currentUser) { throw new Error("Current User is null!") }
+        return updateProfile(currentUser, { photoURL })
     }
 
     return <AuthContext.Provider value={{

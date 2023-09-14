@@ -1,4 +1,5 @@
 import { FirebaseError } from 'firebase/app'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { useRef, useState } from 'react'
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
@@ -8,24 +9,28 @@ import Container from "react-bootstrap/Container"
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import useAuth from '../hooks/useAuth'
-import { UpdateProfileFormData } from '../types/User.types'
 import { toast } from 'react-toastify'
+import useAuth from '../hooks/useAuth'
+import { storage } from '../services/firebase'
+import { UpdateProfileFormData } from '../types/User.types'
 
 const UpdateProfile = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
-
     const {
+        currentUser,
+        reloadUser,
         setDisplayName,
         setEmail,
         setPassword,
-        setPhotoUrl,
+        setPhotoUrl
     } = useAuth()
-
-    const { handleSubmit, register, watch, formState: { errors } } = useForm<UpdateProfileFormData>()
-
-
+    const { handleSubmit, register, watch, formState: { errors } } = useForm<UpdateProfileFormData>({
+        defaultValues: {
+            email: currentUser?.email ?? "",
+            name: currentUser?.displayName ?? "",
+        }
+    })
 
     // Watch the current value of `password` form field
     const passwordRef = useRef("")
@@ -34,52 +39,94 @@ const UpdateProfile = () => {
     const photoFileRef = useRef<FileList | null>(null)
     photoFileRef.current = watch("photoFile")
 
+    if (!currentUser) {
+        return <p>Error, error, error!</p>
+    }
+
     const onUpdateProfile: SubmitHandler<UpdateProfileFormData> = async (data) => {
+        // Clear any previous error state
         setErrorMessage(null)
-        setLoading(true)
 
+        // Update user profile
         try {
-            if (data.displayName) {
-                await setDisplayName(data.displayName)
+            // Disable update-button while update is in progress
+            setLoading(true)
+
+            // Update displayName *ONLY* if it has changed
+            if (data.name !== (currentUser.displayName ?? "")) {
+                console.log("Updating display name...")
+                await setDisplayName(data.name)
             }
 
-            if (data.photoURL) {
-                await setPhotoUrl(data.photoURL)
+            // Only upload a photo if one has been selected
+            if (data.photoFile.length) {
+                const photo = data.photoFile[0]
+                console.log("Would upload photo...", photo)
+
+                // create a reference to upload the file to
+                // example: "photos/3PjBWeCaZmfasyz4jTEURhnFtI83/space.jpg"
+                const fileRef = ref(storage, `photos/${currentUser.uid}/${photo.name}`)
+
+                try {
+                    // upload photo to fileRef
+                    const uploadResult = await uploadBytes(fileRef, photo)
+
+                    // get download url to uploaded file 
+                    const photoUrl = await getDownloadURL(uploadResult.ref)
+
+                    // set download url as the users photoURL
+                    await setPhotoUrl(photoUrl)
+
+                } catch (e) {
+                    console.log("Upload failed", e)
+                    setErrorMessage("Upload failed!")
+                }
             }
 
-            if (data.email) {
+            /*
+            // Update photoUrl *ONLY* if it has changed
+            if (data.photoUrl !== (currentUser?.photoURL ?? "")) {
+                console.log("Updating photo url...")
+                await setPhotoUrl(data.photoUrl)
+            }
+            */
+
+            // Update email *ONLY* if it has changed
+            if (data.email !== (currentUser.email ?? "")) {
+                console.log("Updating email...")
                 await setEmail(data.email)
             }
 
-            if (data.password && data.password === data.confirmPassword) {
+            // Update password *ONLY* if the user has provided a new password to set
+            if (data.password) {
+                console.log("Updating password...")
                 await setPassword(data.password)
-            } else if (data.password && data.password !== data.confirmPassword) {
-                setErrorMessage("Passwords do not match.")
-                setLoading(false)
-                return
             }
+
+            // Reload user data
+            await reloadUser()
 
             // Show success toast 🥂
             toast.success("Profile successfully updated")
 
-            // Given that the reloadUser is already integrated in setEmail, setDisplayName, and setPhotoUrl,
-            // it's not needed to call it separately unless there's a specific scenario where the user needs to be reloaded outside these actions.
-
+            // Enable update-button again
             setLoading(false)
+            console.log("All ok 👍🏻👍🏻👍🏻!")
+
         } catch (error) {
             if (error instanceof FirebaseError) {
                 setErrorMessage(error.message)
             } else {
                 setErrorMessage("Something went wrong. Have you tried turning it off and on again?")
             }
-            setLoading(false);
+            setLoading(false)
         }
-    };
+    }
 
     return (
         <Container className="py-3 center-y">
             <Row>
-                <Col md={{ span: 6, offset: 3 }}>
+                <Col md={{ span: 8, offset: 2 }}>
                     <Card>
                         <Card.Body>
                             <Card.Title className="mb-3">Update Profile</Card.Title>
@@ -95,15 +142,21 @@ const UpdateProfile = () => {
                                     <Form.Control
                                         placeholder="Sean Banan"
                                         type="text"
-                                        {...register('displayName')}
+                                        {...register('name', {
+                                            minLength: {
+                                                value: 3,
+                                                message: "If you have a name, it has to be at least 3 characters long"
+                                            }
+                                        })}
                                     />
+                                    {errors.name && <p className="invalid">{errors.name.message ?? "Invalid value"}</p>}
                                 </Form.Group>
-
 
                                 <Form.Group controlId="photo" className="mb-3">
                                     <Form.Label>Photo</Form.Label>
                                     <Form.Control
                                         type="file"
+                                        accept="image/gif,image/jpeg,image/png,image/webp"
                                         {...register('photoFile')}
                                     />
                                     {errors.photoFile && <p className="invalid">{errors.photoFile.message ?? "Invalid value"}</p>}
@@ -111,7 +164,7 @@ const UpdateProfile = () => {
                                         <span>
                                             {photoFileRef.current[0].name}
                                             {' '}
-                                            ({photoFileRef.current[0].size} bytes)
+                                            ({Math.round(photoFileRef.current[0].size / 1024)} kB)
                                         </span>
                                     )}</Form.Text>
                                 </Form.Group>
@@ -122,8 +175,11 @@ const UpdateProfile = () => {
                                         placeholder="snelhest2000@horsemail.com"
                                         type="email"
                                         autoComplete='email'
-                                        {...register('email')}
+                                        {...register('email', {
+                                            required: "You have to enter an email",
+                                        })}
                                     />
+                                    {errors.email && <p className="invalid">{errors.email.message ?? "Invalid value"}</p>}
                                 </Form.Group>
 
                                 <Form.Group controlId="password" className="mb-3">
@@ -131,8 +187,14 @@ const UpdateProfile = () => {
                                     <Form.Control
                                         type="password"
                                         autoComplete="new-password"
-                                        {...register('password')}
+                                        {...register('password', {
+                                            minLength: {
+                                                value: 3,
+                                                message: "Please enter at least 3 characters"
+                                            },
+                                        })}
                                     />
+                                    {errors.password && <p className="invalid">{errors.password.message ?? "Invalid value"}</p>}
                                     <Form.Text>At least 6 characters</Form.Text>
                                 </Form.Group>
 
@@ -141,8 +203,17 @@ const UpdateProfile = () => {
                                     <Form.Control
                                         type="password"
                                         autoComplete="off"
-                                        {...register('confirmPassword')}
+                                        {...register('passwordConfirm', {
+                                            minLength: {
+                                                value: 3,
+                                                message: "Please enter at least 3 characters"
+                                            },
+                                            validate: (value) => {
+                                                return !passwordRef.current || value === passwordRef.current || "The passwords does not match 🤦🏼‍♂️"
+                                            }
+                                        })}
                                     />
+                                    {errors.passwordConfirm && <p className="invalid">{errors.passwordConfirm.message ?? "Invalid value"}</p>}
                                 </Form.Group>
 
                                 <Button
