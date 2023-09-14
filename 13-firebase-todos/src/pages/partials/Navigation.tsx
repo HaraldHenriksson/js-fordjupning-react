@@ -1,6 +1,7 @@
 import Container from 'react-bootstrap/Container'
+import Image from 'react-bootstrap/Image'
 import Navbar from 'react-bootstrap/Navbar'
-import { NavDropdown, Image } from 'react-bootstrap'
+import NavDropdown from 'react-bootstrap/NavDropdown'
 import Nav from 'react-bootstrap/Nav'
 import { NavLink, Link } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
@@ -14,7 +15,7 @@ const Navigation = () => {
 	} = useAuth()
 
 	return (
-		<Navbar bg="dark" variant="dark" expand="md">
+		<Navbar bg="dark" variant="dark" expand="sm">
 			<Container>
 				<Navbar.Brand as={Link} to="/">🔥 Firebase Todos</Navbar.Brand>
 
@@ -31,6 +32,7 @@ const Navigation = () => {
 										? <Image
 											src={userPhotoUrl}
 											height={30}
+											width={30}
 											title={(userName || userEmail) ?? ""}
 											fluid
 											roundedCircle />
@@ -43,8 +45,8 @@ const Navigation = () => {
 							</NavDropdown>
 						</>) : (<>
 							{/* No user is logged in */}
-							<Nav.Link as={NavLink} end to="/login">Login</Nav.Link>
-							<Nav.Link as={NavLink} end to="/signup">Signup</Nav.Link>
+							<Nav.Link as={NavLink} to="/signup">Signup</Nav.Link>
+							<Nav.Link as={NavLink} to="/login">Login</Nav.Link>
 						</>)}
 					</Nav>
 				</Navbar.Collapse>

@@ -7,11 +7,13 @@ import { todosCol } from "../services/firebase"
 import { deleteDoc, doc } from "firebase/firestore"
 import { toast } from "react-toastify"
 import { Container } from "react-bootstrap"
+import useAuth from "../hooks/useAuth"
 
 const TodoPage = () => {
 	const [showConfirmDelete, setShowConfirmDelete] = useState(false)
 	const navigate = useNavigate()
 	const { id } = useParams()
+	const { currentUser } = useAuth()
 
 	const documentId = id as string
 
@@ -39,6 +41,14 @@ const TodoPage = () => {
 
 	if (loading || !todo) {
 		return <p>Loading todo...</p>
+	}
+
+	if (todo && todo.uid !== currentUser?.uid) {
+		return (
+			<Container className="py-3">
+				<h1>Access denied</h1>
+			</Container>
+		)
 	}
 
 	return (
