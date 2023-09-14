@@ -40,12 +40,15 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
             console.log("Auth state determined:", user)
             setCurrentUser(user)
             if (user) {
+                if (!auth.currentUser) {
+                    return
+                }
+
                 // User is logged in
-                setUserEmail(user.email)
-                setUserName(user.displayName)
-                setUserPhotoUrl(user.photoURL)
-                setUserName(null)
-                setUserPhotoUrl(null)
+                setUserName(auth.currentUser.displayName)
+                setUserEmail(auth.currentUser.email)
+                setUserPhotoUrl(auth.currentUser.photoURL)
+
             } else {
                 // User is logged out
                 setUserEmail(null)

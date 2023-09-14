@@ -10,6 +10,7 @@ import Row from 'react-bootstrap/Row'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import useAuth from '../hooks/useAuth'
 import { UpdateProfileFormData } from '../types/User.types'
+import { toast } from 'react-toastify'
 
 const UpdateProfile = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -52,6 +53,9 @@ const UpdateProfile = () => {
                 setLoading(false)
                 return
             }
+
+            // Show success toast 🥂
+            toast.success("Profile successfully updated")
 
             // Given that the reloadUser is already integrated in setEmail, setDisplayName, and setPhotoUrl,
             // it's not needed to call it separately unless there's a specific scenario where the user needs to be reloaded outside these actions.
@@ -104,6 +108,7 @@ const UpdateProfile = () => {
                                     <Form.Control
                                         placeholder="snelhest2000@horsemail.com"
                                         type="email"
+                                        autoComplete='email'
                                         {...register('email')}
                                     />
                                 </Form.Group>
