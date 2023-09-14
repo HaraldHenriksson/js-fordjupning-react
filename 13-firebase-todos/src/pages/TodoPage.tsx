@@ -54,13 +54,6 @@ const TodoPage = () => {
 				</p>
 
 				<div className="buttons mb-3">
-					<Button
-						variant="success"
-						onClick={() => console.log("Would toggle todo")}
-					>
-						Toggle
-					</Button>
-
 					<Link to={`/todos/${id}/edit`}>
 						<Button variant="warning">Edit</Button>
 					</Link>
