@@ -15,19 +15,24 @@ import { toast } from 'react-toastify'
 const UpdateProfile = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const [loading, setLoading] = useState(false)
-    const { handleSubmit, register, watch, formState: { errors } } = useForm<UpdateProfileFormData>()
+
     const {
-        signup,
-        reloadUser,
+        setDisplayName,
         setEmail,
         setPassword,
-        setDisplayName,
-        setPhotoUrl
+        setPhotoUrl,
     } = useAuth()
+
+    const { handleSubmit, register, watch, formState: { errors } } = useForm<UpdateProfileFormData>()
+
+
 
     // Watch the current value of `password` form field
     const passwordRef = useRef("")
     passwordRef.current = watch('password')
+
+    const photoFileRef = useRef<FileList | null>(null)
+    photoFileRef.current = watch("photoFile")
 
     const onUpdateProfile: SubmitHandler<UpdateProfileFormData> = async (data) => {
         setErrorMessage(null)
@@ -94,13 +99,21 @@ const UpdateProfile = () => {
                                     />
                                 </Form.Group>
 
-                                <Form.Group controlId="photoURL" className="mb-3">
-                                    <Form.Label>Photo URL</Form.Label>
+
+                                <Form.Group controlId="photo" className="mb-3">
+                                    <Form.Label>Photo</Form.Label>
                                     <Form.Control
-                                        placeholder="https://www.chiquita.com/Bananana.jpg"
-                                        type="url"
-                                        {...register('photoURL')}
+                                        type="file"
+                                        {...register('photoFile')}
                                     />
+                                    {errors.photoFile && <p className="invalid">{errors.photoFile.message ?? "Invalid value"}</p>}
+                                    <Form.Text>{photoFileRef.current && photoFileRef.current.length > 0 && (
+                                        <span>
+                                            {photoFileRef.current[0].name}
+                                            {' '}
+                                            ({photoFileRef.current[0].size} bytes)
+                                        </span>
+                                    )}</Form.Text>
                                 </Form.Group>
 
                                 <Form.Group controlId="email" className="mb-3">

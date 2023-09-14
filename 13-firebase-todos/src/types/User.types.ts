@@ -12,6 +12,7 @@ export type LoginCredentials = {
 
 export type UpdateProfileFormData = {
     displayName?: string
+    photoFile: FileList
     photoURL?: string
     email: string
     password: string

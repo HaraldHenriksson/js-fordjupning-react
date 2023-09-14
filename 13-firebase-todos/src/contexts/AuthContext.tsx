@@ -37,7 +37,6 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     useEffect(() => {
         // Set up the authentication state observer
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            console.log("Auth state determined:", user)
             setCurrentUser(user)
             if (user) {
                 if (!auth.currentUser) {
@@ -61,15 +60,12 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     }, [])
 
     const signup = (email: string, password: string) => {
-        console.log("Whould signup use from AuthContext", email, password)
 
         // Sign up user in Firebase Auth
         return createUserWithEmailAndPassword(auth, email, password)
     }
 
     const login = async (email: string, password: string) => {
-        console.log("Would login user from AuthContext", email, password)
-
         // Login user in Firebase Auth
         return await signInWithEmailAndPassword(auth, email, password)
     }
