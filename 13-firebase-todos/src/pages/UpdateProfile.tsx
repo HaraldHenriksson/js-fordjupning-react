@@ -13,6 +13,7 @@ import { toast } from 'react-toastify'
 import useAuth from '../hooks/useAuth'
 import { storage } from '../services/firebase'
 import { UpdateProfileFormData } from '../types/User.types'
+import { Image } from 'react-bootstrap'
 
 const UpdateProfile = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -41,6 +42,14 @@ const UpdateProfile = () => {
 
     if (!currentUser) {
         return <p>Error, error, error!</p>
+    }
+
+    const handleDeletePhoto = async () => {
+        await setPhotoUrl("")
+
+        await reloadUser()
+
+        toast.success("Photo deleted successfully")
     }
 
     const onUpdateProfile: SubmitHandler<UpdateProfileFormData> = async (data) => {
@@ -137,6 +146,29 @@ const UpdateProfile = () => {
                                 {/*
 									Fill the displayName, photoURL and email form fields with their current value!
 								*/}
+
+                                <div className="profile-photo-wrapper text-center my-3">
+                                    <div className="dflex justify-content-center">
+
+                                        <Image
+                                            src={currentUser.photoURL || "https://via.placeholder.com/225"}
+                                            fluid
+                                            roundedCircle
+                                            className='img-square w-75'
+                                        />
+
+                                    </div>
+
+                                    <Button
+                                        onClick={handleDeletePhoto}
+                                        size='sm'
+                                        variant='secondary'
+                                    >
+                                        Delete Photo
+                                    </Button>
+
+                                </div>
+
                                 <Form.Group controlId="displayName" className="mb-3">
                                     <Form.Label>Name</Form.Label>
                                     <Form.Control
