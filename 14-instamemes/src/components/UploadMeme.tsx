@@ -1,5 +1,7 @@
 import { useCallback } from 'react'
+import Alert from 'react-bootstrap/Alert'
 import Image from 'react-bootstrap/Image'
+import ProgressBar from 'react-bootstrap/ProgressBar'
 import classNames from 'classnames'
 import { useDropzone } from 'react-dropzone'
 import { toast } from 'react-toastify'
@@ -10,14 +12,18 @@ import useUploadMeme from '../hooks/useUploadMeme'
 
 const UploadMeme = () => {
     const uploadMeme = useUploadMeme()
+
     // Drop it like it's hot 🔥
     const onDrop = useCallback((acceptedFiles: File[]) => {
         if (!acceptedFiles.length) {
             toast.warning("Y WOULD U DO STUFF LIKE DAT?!")
             return
         }
-        console.log("🎤:", acceptedFiles)
-    }, [])
+        console.log(acceptedFiles[0])
+
+        // trigger upload of the dropped meme
+        uploadMeme.upload(acceptedFiles[0])
+    }, [uploadMeme])
 
     const { getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject } = useDropzone({
         accept: {
@@ -54,6 +60,19 @@ const UploadMeme = () => {
                         className="w-50"
                         fluid />}
             </div>
+
+            {/* Upload Progress Bar */}
+            {uploadMeme.progress !== null && (
+                <ProgressBar
+                    animated
+                    label={`${uploadMeme.progress}%`}
+                    now={uploadMeme.progress}
+                    variant="success"
+                />
+            )}
+
+            {uploadMeme.isError && <Alert variant="danger">😳 {uploadMeme.error}</Alert>}
+            {uploadMeme.isSuccess && <Alert variant="success">😂 that was a funny meme!</Alert>}
         </div>
     )
 }
