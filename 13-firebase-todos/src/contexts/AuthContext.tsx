@@ -9,7 +9,7 @@ type AuthContextType = {
     login: (email: string, password: string) => Promise<UserCredential>
     logout: () => Promise<void>
     signup: (email: string, password: string) => Promise<UserCredential>
-    reloadUser: () => Promise<void>
+    reloadUser: () => Promise<boolean>
     resetPassword: (email: string) => Promise<void>
     setEmail: (email: string) => Promise<void>
     setDisplayName: (name: string) => Promise<void>
@@ -34,31 +34,6 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     const [userName, setUserName] = useState<string | null>(null)
     const [userPhotoUrl, setUserPhotoUrl] = useState<string | null>(null)
 
-    useEffect(() => {
-        // Set up the authentication state observer
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setCurrentUser(user)
-            if (user) {
-                if (!auth.currentUser) {
-                    return
-                }
-
-                // User is logged in
-                setUserName(auth.currentUser.displayName)
-                setUserEmail(auth.currentUser.email)
-                setUserPhotoUrl(auth.currentUser.photoURL)
-
-            } else {
-                // User is logged out
-                setUserEmail(null)
-            }
-            setIsAuthDetermined(false)
-        })
-
-        // Clean up the observer on component unmount
-        return unsubscribe
-    }, [])
-
     const signup = (email: string, password: string) => {
 
         // Sign up user in Firebase Auth
@@ -75,11 +50,23 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
     }
 
     const reloadUser = async () => {
-        if (currentUser) {
-            await currentUser.reload()
-            setCurrentUser(auth.currentUser)
-            setUserEmail(auth.currentUser?.email || null)
+        if (!auth.currentUser) {
+            return false
         }
+
+        // Ask Firebase to reload the current user
+        // await reload(auth.currentUser)
+
+        // This will set currentUser to what it already is,
+        // hence it will not trigger a state update nor a re-render
+        // setCurrentUser(auth.currentUser)
+
+        // We instead update our "derived" states
+        setUserName(auth.currentUser.displayName)
+        setUserEmail(auth.currentUser.email)
+        setUserPhotoUrl(auth.currentUser.photoURL)
+
+        return true
     }
 
     const resetPassword = (email: string) => {
@@ -107,6 +94,33 @@ const AuthContextProvider: React.FC<AuthContextProps> = ({ children }) => {
         if (!currentUser) { throw new Error("Current User is null!") }
         return updateProfile(currentUser, { photoURL })
     }
+
+    useEffect(() => {
+        // Set up the authentication state observer
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setCurrentUser(user)
+            if (user) {
+                if (!auth.currentUser) {
+                    return
+                }
+
+                // User is logged in
+                setUserName(auth.currentUser.displayName)
+                setUserEmail(auth.currentUser.email)
+                setUserPhotoUrl(auth.currentUser.photoURL)
+
+            } else {
+                // User is logged out
+                setUserEmail(null)
+                setUserName(null)
+                setUserPhotoUrl(null)
+            }
+            setIsAuthDetermined(false)
+        })
+
+        // Clean up the observer on component unmount
+        return unsubscribe
+    }, [])
 
     return <AuthContext.Provider value={{
         signup,

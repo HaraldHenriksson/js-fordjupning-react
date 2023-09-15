@@ -1,5 +1,5 @@
 import { FirebaseError } from 'firebase/app'
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import { useRef, useState } from 'react'
 import Alert from 'react-bootstrap/Alert'
 import Button from 'react-bootstrap/Button'
@@ -13,10 +13,11 @@ import { toast } from 'react-toastify'
 import useAuth from '../hooks/useAuth'
 import { storage } from '../services/firebase'
 import { UpdateProfileFormData } from '../types/User.types'
-import { Image } from 'react-bootstrap'
+import { Image, ProgressBar } from 'react-bootstrap'
 
 const UpdateProfile = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
+    const [uploadProgress, setUploadProgress] = useState<number | null>(null)
     const [loading, setLoading] = useState(false)
     const {
         currentUser,
@@ -24,7 +25,8 @@ const UpdateProfile = () => {
         setDisplayName,
         setEmail,
         setPassword,
-        setPhotoUrl
+        setPhotoUrl,
+        userPhotoUrl
     } = useAuth()
     const { handleSubmit, register, watch, formState: { errors } } = useForm<UpdateProfileFormData>({
         defaultValues: {
@@ -76,29 +78,35 @@ const UpdateProfile = () => {
                 // example: "photos/3PjBWeCaZmfasyz4jTEURhnFtI83/space.jpg"
                 const fileRef = ref(storage, `photos/${currentUser.uid}/${photo.name}`)
 
-                try {
-                    // upload photo to fileRef
-                    const uploadResult = await uploadBytes(fileRef, photo)
+                // upload photo to fileRef
+                const uploadTask = uploadBytesResumable(fileRef, photo)
 
-                    // get download url to uploaded file 
-                    const photoUrl = await getDownloadURL(uploadResult.ref)
+                // attach upload observer
+                uploadTask.on("state_changed", (snapshot) => {
+                    // got an update about the upload
+                    setUploadProgress(Math.round(snapshot.bytesTransferred / snapshot.totalBytes * 1000) / 10)
+
+
+                }, (err) => {
+                    // something went wrong
+                    console.log("Upload failed!", err)
+                    setErrorMessage("Upload failed!")
+
+                }, async () => {
+                    // we're done!
+                    console.log("Upload completed!")
+
+                    // get download url to uploaded file
+                    const photoUrl = await getDownloadURL(fileRef)
+
+                    console.log("Photo successfully uploaded, download url is: " + photoUrl)
 
                     // set download url as the users photoURL
                     await setPhotoUrl(photoUrl)
 
-                } catch (e) {
-                    console.log("Upload failed", e)
-                    setErrorMessage("Upload failed!")
-                }
+                    setUploadProgress(null)
+                })
             }
-
-            /*
-            // Update photoUrl *ONLY* if it has changed
-            if (data.photoUrl !== (currentUser?.photoURL ?? "")) {
-                console.log("Updating photo url...")
-                await setPhotoUrl(data.photoUrl)
-            }
-            */
 
             // Update email *ONLY* if it has changed
             if (data.email !== (currentUser.email ?? "")) {
@@ -151,7 +159,7 @@ const UpdateProfile = () => {
                                     <div className="dflex justify-content-center">
 
                                         <Image
-                                            src={currentUser.photoURL || "https://via.placeholder.com/225"}
+                                            src={userPhotoUrl || "https://via.placeholder.com/225"}
                                             fluid
                                             roundedCircle
                                             className='img-square w-75'
@@ -192,13 +200,25 @@ const UpdateProfile = () => {
                                         {...register('photoFile')}
                                     />
                                     {errors.photoFile && <p className="invalid">{errors.photoFile.message ?? "Invalid value"}</p>}
-                                    <Form.Text>{photoFileRef.current && photoFileRef.current.length > 0 && (
-                                        <span>
-                                            {photoFileRef.current[0].name}
-                                            {' '}
-                                            ({Math.round(photoFileRef.current[0].size / 1024)} kB)
-                                        </span>
-                                    )}</Form.Text>
+                                    <Form.Text>
+                                        {uploadProgress !== null
+                                            ? (
+                                                <ProgressBar
+                                                    now={uploadProgress}
+                                                    label={`${uploadProgress}%`}
+                                                    animated
+                                                    className="mt-1"
+                                                    variant="success"
+                                                />
+                                            )
+                                            : photoFileRef.current && photoFileRef.current.length > 0 && (
+                                                <span>
+                                                    {photoFileRef.current[0].name}
+                                                    {' '}
+                                                    ({Math.round(photoFileRef.current[0].size / 1024)} kB)
+                                                </span>
+                                            )}
+                                    </Form.Text>
                                 </Form.Group>
 
                                 <Form.Group controlId="email" className="mb-3">
