@@ -1,34 +1,21 @@
-import { useCallback } from 'react'
-import Image from 'react-bootstrap/Image'
-import classNames from 'classnames'
-import { useDropzone } from 'react-dropzone'
-import imgDrop from '../assets/images/drop.gif'
+import Container from "react-bootstrap/Container"
+import UploadMeme from "../components/UploadMeme"
+import useAuth from "../hooks/useAuth"
 
-const UploadMeme = () => {
-	// Drop it like it's hot 🔥
-	const onDrop = useCallback((acceptedFiles: File[]) => {
-		console.log("🎤:", acceptedFiles)
-	}, [])
-
-	const { getRootProps, getInputProps, isDragActive } = useDropzone({
-		onDrop: onDrop,
-	})
+const HomePage = () => {
+	const { currentUser } = useAuth()
 
 	return (
-		<div {...getRootProps()} id="dropzone-wrapper">
-			<input {...getInputProps()} />
+		<Container className="py-3">
+			<h1>InstaMemes</h1>
+			<h2>When I get sad I stop being sad and be awesome instead</h2>
 
-			<div className="indicator">
-				{isDragActive
-					? <Image
-						src={imgDrop}
-						alt="Drop your files here"
-						title="Drop it like it's hawt!"
-						fluid />
-					: <p>All Your Memes Are Belong To Me</p>}
-			</div>
-		</div>
+			{currentUser && <UploadMeme />}
+
+			<p>Here be all dem memes...</p>
+
+		</Container>
 	)
 }
 
-export default UploadMeme
+export default HomePage
