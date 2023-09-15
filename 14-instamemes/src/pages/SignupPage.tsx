@@ -61,6 +61,7 @@ const SignupPage = () => {
 									<Form.Control
 										placeholder="snelhest2000@horsemail.com"
 										type="email"
+										autoComplete='email'
 										{...register('email', {
 											required: "You have to enter an email",
 										})}

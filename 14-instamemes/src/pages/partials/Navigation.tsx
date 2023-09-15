@@ -30,15 +30,15 @@ const Navigation = () => {
 							<NavDropdown
 								title={
 									userPhotoUrl
-									? <Image
-										src={userPhotoUrl}
-										height={30}
-										width={30}
-										title={(userName || userEmail) ?? ""}
-										className="img-square"
-										fluid
-										roundedCircle />
-									: userName || userEmail
+										? <Image
+											src={userPhotoUrl}
+											height={30}
+											width={30}
+											title={(userName || userEmail) ?? ""}
+											className="img-square"
+											fluid
+											roundedCircle />
+										: userName || userEmail
 								}
 							>
 								<NavDropdown.Item as={NavLink} to="/update-profile">Update Profile</NavDropdown.Item>
