@@ -1,32 +1,30 @@
-import Button from "react-bootstrap/Button"
-import ButtonGroup from "react-bootstrap/ButtonGroup"
-import Container from "react-bootstrap/Container"
-import ListGroup from "react-bootstrap/ListGroup"
-import { TodoFormData } from "../../types/Todo.types"
-import { toast } from "react-toastify"
-import TodoForm from "./TodoForm"
-import { dummyTodos as todos } from "../../data/todos"
+import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Container from "react-bootstrap/Container";
+import ListGroup from "react-bootstrap/ListGroup";
+import { TodoFormData } from "../../types/Todo.types";
+import { toast } from "react-toastify";
+import TodoForm from "./TodoForm";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { handleAddTodo, handleDelete, handleToggle } from "./todosSlice";
 
 const TodosPage = () => {
-	const handleAddTodo = async (data: TodoFormData) => {
-		console.log("handleAddTodo", data)
+	const dispatch = useAppDispatch(); // Get the dispatch function
+	const todos = useAppSelector(state => state.todos); // Get the todos from the Redux store
 
-		// 🥂
-		toast.success("Yay, even MORE stuff to do... 😁")
+	const onAddTodo = async (data: TodoFormData) => {
+		dispatch(handleAddTodo(data)); // Dispatch the handleAddTodo action
+		toast.success("Yay, even MORE stuff to do... 😁");
 	}
 
-	const handleToggle = async (id: string) => {
-		console.log("handleToggle", id)
-
-		// 🥂
-		toast.success("Yay, you did something... 😁")
+	const onToggle = async (id: string) => {
+		dispatch(handleToggle(id)); // Dispatch the handleToggle action
+		toast.success("Yay, you did something... 😁");
 	}
 
-	const handleDelete = async (id: string) => {
-		console.log("handleDelete", id)
-
-		// 🥂
-		toast.success("Deleting stuff instead of doing them still counts... 🏆")
+	const onDelete = async (id: string) => {
+		dispatch(handleDelete(id)); // Dispatch the handleDelete action
+		toast.success("Deleting stuff instead of doing them still counts... 🏆");
 	}
 
 	return (
@@ -35,7 +33,7 @@ const TodosPage = () => {
 				<h1 className="mb-3">Todos</h1>
 			</div>
 
-			<TodoForm onSave={handleAddTodo} />
+			<TodoForm onSave={onAddTodo} /> {/* Updated to use onAddTodo */}
 
 			{todos && todos.length > 0 && (
 				<ListGroup className="todolist">
@@ -49,14 +47,14 @@ const TodosPage = () => {
 								<Button
 									variant="outline-success"
 									size="sm"
-									onClick={() => handleToggle(todo.id)}
+									onClick={() => onToggle(todo.id)}
 								>
 									{todo.completed ? "Undo" : "Done"}
 								</Button>
 								<Button
 									variant="outline-danger"
 									size="sm"
-									onClick={() => handleDelete(todo.id)}
+									onClick={() => onDelete(todo.id)}
 								>
 									Delete
 								</Button>
@@ -73,4 +71,4 @@ const TodosPage = () => {
 	)
 }
 
-export default TodosPage
+export default TodosPage;
