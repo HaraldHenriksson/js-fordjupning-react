@@ -1,7 +1,11 @@
 import Container from "react-bootstrap/Container"
 import AccountButtons from "./AccountButtons"
+import { useSelector } from "react-redux"
+import { RootState } from "../../app/store"
 
 const AccountPage = () => {
+	const accountState = useSelector((state: RootState) => state.account)
+
 	return (
 		<Container className="py-3">
 			<h1>Account</h1>
