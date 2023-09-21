@@ -1,22 +1,26 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Account } from "../../types/Account.types";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
+import { Account } from "../../types/Account.types"
 
 const initialState: Account = {
-    balance: 1337,
+	balance: 42,
 }
 
 export const accountSlice = createSlice({
-    name: "account",
-    initialState: initialState,
-    reducers: {
-        deposit: (state, action: PayloadAction<number>) => {
-            state.balance += action.payload
-        },
+	name: "account",
+	initialState,
+	reducers: {
+		deposit: (state, action: PayloadAction<number>) => {
+			state.balance += action.payload
+		},
 
-        withdraw: (state, action: PayloadAction<number>) => {
-            state.balance -= action.payload
-        }
-    }
+		withdraw: (state, action: PayloadAction<number>) => {
+			state.balance -= action.payload
+		}
+	}
 })
 
+// Action creators are generated for each reducer function
+export const { deposit, withdraw } = accountSlice.actions
+
+// Export the reducer
 export default accountSlice.reducer
