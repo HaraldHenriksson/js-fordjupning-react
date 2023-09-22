@@ -42,6 +42,7 @@ const TodoForm: React.FC<IProps> = ({ onSave, initialValues }) => {
 					placeholder="What do you need to do?"
 					aria-label="What do you need to do?"
 					aria-describedby="button-save"
+					// disabled
 					type="text"
 					{...register("title", {
 						required: "You have to write something at least...",
@@ -54,6 +55,9 @@ const TodoForm: React.FC<IProps> = ({ onSave, initialValues }) => {
 				/>
 				<Button variant="primary" type="submit" id="button-save">
 					Save
+				</Button>
+				<Button variant="secondary" type="reset" id="button-reset">
+					Reset
 				</Button>
 			</InputGroup>
 			{errors.title && (
