@@ -2,7 +2,6 @@ import React from 'react'
 import Button from "react-bootstrap/Button"
 import ButtonGroup from "react-bootstrap/ButtonGroup"
 import ListGroup from "react-bootstrap/ListGroup"
-
 import { Todo } from '../../types/Todo.types'
 
 type TodoListProps = {
@@ -17,11 +16,12 @@ const TodoList: React.FC<TodoListProps> = ({
     todos,
 }) => {
     return (
-        <ListGroup className="todolist">
+        <ListGroup className="todolist" role="list">
             {todos.map((todo) => (
                 <ListGroup.Item
                     key={todo.id}
                     className={todo.completed ? "done" : ""}
+                    role="listitem"
                 >
                     <span className="todo-title">{todo.title}</span>
                     <ButtonGroup>
