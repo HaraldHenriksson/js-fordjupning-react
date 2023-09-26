@@ -1,12 +1,28 @@
 <script lang="ts">
-const todos = [
-	{ id: 1, title: 'Make coffee', completed: true },
-	{ id: 2, title: 'Drink coffee', completed: false },
-	{ id: 3, title: 'Drink MOAR coffee', completed: false },
-	{ id: 4, title: 'Drink ALL THE coffee', completed: false },
-]
+export default {
+	data() {
+		return {
+			count: 0,
 
-export default {}
+			username: '',
+
+			todos: [
+				{ id: 1, title: 'Make coffee', completed: true },
+				{ id: 2, title: 'Drink coffee', completed: false },
+				{ id: 3, title: 'Drink MOAR coffee', completed: false },
+				{ id: 4, title: 'Drink ALL THE coffee', completed: false },
+			],
+		}
+	},
+
+	methods: {},
+
+	computed: {
+		displayName() {
+			return this.username ? this.username: "anonymus haxx0r"
+		}
+	},
+}
 </script>
 
 <template>
@@ -16,16 +32,21 @@ export default {}
 		<section class="basics">
 			<h2>MSG</h2>
 
-			<p>You have clicked the button: COUNT times.</p>
-			<button class="btn btn-success btn-lg">Click meee! 😃</button>
+			<p>You have clicked the button: {{ count }} times.</p>
+			<button class="btn btn-success btn-lg" @click="count++">Click meee! 😃</button>
 
 			<hr />
 
 			<div class="mb-3">
-				<input type="text" class="form-control" placeholder="Enter your name" />
+				<input
+					type="text"
+					class="form-control"
+					placeholder="Enter your name"
+					v-model="username"
+				/>
 			</div>
 
-			<p>Hello, USERNAME!</p>
+			<p>Hello, {{ displayName }}!</p>
 		</section>
 
 		<hr />
@@ -33,8 +54,13 @@ export default {}
 		<section class="todos">
 			<h2>Todos</h2>
 			<ul>
-				<li>I am a procastrinated todo 😰</li>
-				<li class="completed">I am a completed todo 😁</li>
+				<li
+					v-for="todo in todos"
+					:key="todo.id"
+					:class="todo.completed ? 'completed' : ''"
+				>
+					{{todo.title}}
+				</li>
 			</ul>
 		</section>
 
