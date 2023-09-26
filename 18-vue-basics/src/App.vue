@@ -17,6 +17,11 @@ export default {
 			],
 
 			salary: 10,
+
+			showBox: false,
+
+			x: 0,
+			y: 0,
 		}
 	},
 
@@ -32,6 +37,15 @@ export default {
 		getSalaryImage() {
 			return this.salary >= 50 ? imgMoneyFed : imgRent
 		},
+
+		toggleBox() {
+			this.showBox = !this.showBox
+		},
+
+		updateCoords(e: MouseEvent) {
+			this.x = e.offsetX
+			this.y = e.offsetX
+		}
 	},
 
 	computed: {
@@ -92,10 +106,11 @@ export default {
 
 			<div class="buttons">
 				<div class="mb-1">
-					<button class="btn btn-primary btn-lg" 
-					@click.exact="increaseSalary()"
-					@click.alt="increaseSalary(50)"
-				>
+					<button
+						class="btn btn-primary btn-lg"
+						@click.exact="increaseSalary()"
+						@click.alt="increaseSalary(50)"
+					>
 						Increase 1 &euro; 🤑
 					</button>
 
@@ -104,7 +119,11 @@ export default {
 					</button>
 				</div>
 				<div>
-					<button class="btn btn-success btn-lg" @click="increaseSalary(5)">
+					<button
+						class="btn btn-success btn-lg"
+						@click.exact="increaseSalary(5)"
+						@click.shift="increaseSalary(100)"
+					>
 						Increase 5 &euro; 🤑🤑🤑
 					</button>
 
@@ -119,14 +138,14 @@ export default {
 
 		<section class="box">
 			<div class="mb-3">
-				<button class="btn btn-primary btn-lg">🏃🏻</button>
+				<button class="btn btn-primary btn-lg" @click="toggleBox">🏃🏻</button>
 			</div>
 
-			<div class="grey-box">
-				<div class="coords">42, 1337</div>
+			<div class="grey-box" v-show="showBox" @mousemove="updateCoords">
+				<div class="coords">{{ x }}, {{ y }}</div>
 			</div>
 
-			<p class="d-none">No 📦 for you!</p>
+			<p v-show="!showBox">No 📦 for you!</p>
 		</section>
 	</div>
 </template>
